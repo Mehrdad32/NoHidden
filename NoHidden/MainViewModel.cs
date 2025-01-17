@@ -45,10 +45,13 @@ namespace NoHidden
         private string? operationGroupHeader;
 
         [ObservableProperty]
-        private ObservableCollection<string> removableDrives;
+        private ObservableCollection<string>? removableDrives;
 
         [ObservableProperty]
         private string? selectedDrive;
+
+        [ObservableProperty]
+        private ObservableCollection<Problem> detectedProblems = new();
 
         [ObservableProperty]
         private Visibility disableAutoRunButtonVisibility = Visibility.Visible;
@@ -62,6 +65,11 @@ namespace NoHidden
             CheckAutorunStatus();
             CheckAntivirusStatus();
             LoadDrives();
+
+            // test
+            DetectedProblems.Add(new Problem { Description = "Detect virus file." });
+            DetectedProblems.Add(new Problem { Description = "Detect hidden folder without name." });
+            DetectedProblems.Add(new Problem { Description = "Detect autorun.inf file in the root of the USB disk." });
         }
 
         private void LoadLocalizedResources()
@@ -168,8 +176,25 @@ namespace NoHidden
         private void RefreshDrives()
         {
             LoadDrives();
-            if (RemovableDrives.Count == 0)
+            if (RemovableDrives!.Count == 0)
                 Messages = "No removable devices has been detected!";
         }
+
+        [RelayCommand]
+        private void FixProblem(Problem problem)
+        {
+            // Handle fixing the problem
+            // Example: Remove the problem from the list
+            DetectedProblems.Remove(problem);
+
+            // Add your logic here to resolve the specific problem
+            // Example: Delete a file or perform another action
+        }
+    }
+
+    public class Problem
+    {
+        public string? Description { get; set; }
+        public string? AdditionalData { get; set; }
     }
 }

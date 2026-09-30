@@ -1,86 +1,115 @@
-﻿using System;
-using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 
-namespace NoHidden.Managers
+namespace NoHidden.Managers;
+
+public static class LocalizationManager
 {
-    public static class LocalizationManager
+    private const string DefaultLanguage = "en-US";
+
+    private static readonly HashSet<string> SupportedLanguages =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            "en-US",
+            "fa-IR"
+        };
+
+    private static readonly string SettingsDirectory =
+        Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "NoHidden");
+
+    private static readonly string LanguageFilePath =
+        Path.Combine(SettingsDirectory, "language.txt");
+
+    public static string CurrentLanguage { get; private set; } = DefaultLanguage;
+
+    public static void LoadLanguage()
     {
-        private const string LanguageConfigKey = "Language";
+        ChangeLanguage(ReadSavedLanguage(), persist: false);
+    }
 
-        // Change the language dynamically
-        public static void ChangeLanguage(string cultureName)
+    public static void ChangeLanguage(string cultureName, bool persist = true)
+    {
+        if (!SupportedLanguages.Contains(cultureName))
         {
-            // Load the appropriate ResourceDictionary
-            var dictionary = new ResourceDictionary
+            cultureName = DefaultLanguage;
+        }
+
+        var culture = CultureInfo.GetCultureInfo(cultureName);
+        var dictionary = new ResourceDictionary
+        {
+            Source = new Uri(
+                $"/Resources/Strings.{cultureName}.xaml",
+                UriKind.Relative)
+        };
+
+        Application.Current.Resources.MergedDictionaries.Clear();
+        Application.Current.Resources.MergedDictionaries.Add(dictionary);
+
+        CultureInfo.CurrentUICulture = culture;
+        CultureInfo.CurrentCulture = culture;
+        CurrentLanguage = cultureName;
+
+        if (persist)
+        {
+            SaveLanguage(cultureName);
+        }
+
+        foreach (Window window in Application.Current.Windows)
+        {
+            window.FlowDirection = GetFlowDirection(cultureName);
+        }
+    }
+
+    public static FlowDirection GetFlowDirection(string? cultureName = null)
+    {
+        string language = cultureName ?? CurrentLanguage;
+
+        return language.StartsWith("fa", StringComparison.OrdinalIgnoreCase)
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
+    }
+
+    private static string ReadSavedLanguage()
+    {
+        try
+        {
+            if (!File.Exists(LanguageFilePath))
             {
-                Source = new Uri($"/Resources/Strings.{cultureName}.xaml", UriKind.Relative)
-            };
-
-            // Replace existing ResourceDictionary
-            Application.Current.Resources.MergedDictionaries.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(dictionary);
-
-            // Set the culture
-            CultureInfo.CurrentUICulture = new CultureInfo(cultureName);
-            CultureInfo.CurrentCulture = new CultureInfo(cultureName);
-
-            // Save the selected language
-            SaveLanguageToConfig(cultureName);
-
-            // Set the FlowDirection
-            SetFlowDirection(cultureName);
-
-            // Notify the UI to refresh
-            RefreshUI();
-        }
-
-        // Load the language on startup
-        public static void LoadLanguage()
-        {
-            string cultureName = GetSavedLanguage();
-            ChangeLanguage(cultureName);
-        }
-
-        // Save the selected language to config
-        private static void SaveLanguageToConfig(string cultureName)
-        {
-            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings[LanguageConfigKey].Value = cultureName;
-            config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
-        }
-
-        // Get the saved language from config
-        private static string GetSavedLanguage()
-        {
-            return ConfigurationManager.AppSettings[LanguageConfigKey] ?? "en-US";
-        }
-
-        // Set FlowDirection based on language
-        private static void SetFlowDirection(string cultureName)
-        {
-            FlowDirection flowDirection = cultureName.StartsWith("fa") ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
-
-            foreach (Window window in Application.Current.Windows)
-            {
-                window.FlowDirection = flowDirection;
+                return DefaultLanguage;
             }
-        }
 
-        // Refresh the UI dynamically
-        private static void RefreshUI()
+            string savedLanguage = File.ReadAllText(LanguageFilePath).Trim();
+            return SupportedLanguages.Contains(savedLanguage)
+                ? savedLanguage
+                : DefaultLanguage;
+        }
+        catch (IOException)
         {
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window.DataContext != null)
-                {
-                    var viewModelType = window.DataContext.GetType();
-                    var newViewModel = Activator.CreateInstance(viewModelType);
-                    window.DataContext = newViewModel;
-                }
-            }
+            return DefaultLanguage;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return DefaultLanguage;
+        }
+    }
+
+    private static void SaveLanguage(string cultureName)
+    {
+        try
+        {
+            Directory.CreateDirectory(SettingsDirectory);
+            File.WriteAllText(LanguageFilePath, cultureName);
+        }
+        catch (IOException)
+        {
+            // Language persistence is optional; the UI should still keep working.
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Language persistence is optional; the UI should still keep working.
         }
     }
 }

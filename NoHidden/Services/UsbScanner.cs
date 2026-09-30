@@ -104,11 +104,11 @@ public sealed class UsbScanner
 
             string currentDirectory = pendingDirectories.Pop();
 
-            IEnumerable<string> entries;
+            string[] entries;
 
             try
             {
-                entries = Directory.EnumerateFileSystemEntries(currentDirectory);
+                entries = Directory.GetFileSystemEntries(currentDirectory);
             }
             catch (UnauthorizedAccessException)
             {
@@ -190,6 +190,12 @@ public sealed class UsbScanner
                     attributes,
                     findings);
             }
+        }
+
+        if (!Directory.Exists(normalizedRoot))
+        {
+            throw new DirectoryNotFoundException(
+                "The USB drive was disconnected before the scan completed.");
         }
 
         return new ScanReport(

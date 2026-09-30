@@ -47,4 +47,16 @@
     <sys:String x:Key="Language">Language</sys:String>
     <sys:String x:Key="Status">Status</sys:String>
     <sys:String x:Key="Error">Error: {0}</sys:String>
+
+    <sys:String x:Key="ApplicationAlreadyRunning">NoHidden is already running.</sys:String>
+
+    <sys:String x:Key="AdminPermissionTitle">Administrator permission required</sys:String>
+    <sys:String x:Key="AdminPermissionSubtitle">Required to change Windows protection settings</sys:String>
+    <sys:String x:Key="AdminPermissionDescription">To disable AutoRun and AutoPlay system-wide, NoHidden needs to restart once with Administrator permission. After you confirm, this window will close, the standard Windows UAC prompt will appear, and NoHidden will continue the protection step automatically.</sys:String>
+    <sys:String x:Key="AdminPermissionNote">NoHidden only changes Windows AutoRun and AutoPlay policy in this step. It does not delete or modify files on any USB drive.</sys:String>
+    <sys:String x:Key="RestartAsAdministrator">Restart as Administrator</sys:String>
+    <sys:String x:Key="Cancel">Cancel</sys:String>
+    <sys:String x:Key="AdminPermissionCanceled">The operation was canceled. No settings were changed.</sys:String>
+    <sys:String x:Key="AdminElevationFailed">NoHidden is not running with Administrator permission, so protection could not be applied.</sys:String>
+    <sys:String x:Key="AdminElevationRequired">Administrator permission is required to apply these settings.</sys:String>
 </ResourceDictionary>

@@ -558,13 +558,15 @@
                                   MinWidth="250"
                                   MaxWidth="430"
                                   HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Center" />
+                                  VerticalAlignment="Center"
+                                  IsEnabled="{Binding CanStartScan}" />
 
                         <Button Grid.Column="2"
                                 Command="{Binding RefreshDrivesCommand}"
                                 Style="{StaticResource IconButtonStyle}"
                                 ToolTip="{DynamicResource RefreshDrives}"
-                                Margin="10,0,0,0">
+                                Margin="10,0,0,0"
+                                IsEnabled="{Binding CanStartScan}">
                             <Image Source="pack://application:,,,/refresh.png"
                                    Width="22"
                                    Height="22"
@@ -574,7 +576,7 @@
                         <Button Grid.Column="3"
                                 Content="{DynamicResource ScanUsb}"
                                 Command="{Binding StartScanCommand}"
-                                IsEnabled="{Binding HasSelectedDrive}"
+                                IsEnabled="{Binding CanStartScan}"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Margin="12,0,0,0"
                                 MinWidth="120" />
@@ -585,7 +587,9 @@
 
                     <Grid Grid.Row="2"
                           MinHeight="220">
-                        <StackPanel HorizontalAlignment="Center"
+
+                        <StackPanel Visibility="{Binding ScanEmptyStateVisibility}"
+                                    HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     MaxWidth="650">
                             <Border Width="72"
@@ -617,6 +621,135 @@
                                        LineHeight="22"
                                        Margin="0,8,0,0" />
                         </StackPanel>
+
+                        <StackPanel Visibility="{Binding ScanProgressVisibility}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    Margin="40,0">
+                            <TextBlock Text="{DynamicResource UsbScanner}"
+                                       FontSize="20"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Center" />
+
+                            <ProgressBar IsIndeterminate="True"
+                                         Height="6"
+                                         Margin="0,18,0,14"
+                                         Background="#182236"
+                                         Foreground="#3B82F6" />
+
+                            <TextBlock Text="{Binding ScanProgressText}"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       FontSize="13"
+                                       TextAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxHeight="44" />
+
+                            <Button Content="{DynamicResource CancelScan}"
+                                    Command="{Binding CancelScanCommand}"
+                                    Visibility="{Binding CancelScanVisibility}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,18,0,0"
+                                    MinWidth="100" />
+                        </StackPanel>
+
+                        <Grid Visibility="{Binding ScanResultsVisibility}"
+                              Margin="0,14,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0"
+                                  Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource ScanResults}"
+                                               FontSize="17"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding ScanSummaryText}"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               FontSize="12"
+                                               Margin="0,4,0,0" />
+                                </StackPanel>
+
+                                <Button Grid.Column="1"
+                                        Content="{DynamicResource RestoreAllHidden}"
+                                        Command="{Binding RestoreAllVisibleItemsCommand}"
+                                        Visibility="{Binding RestoreAllVisibility}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        VerticalAlignment="Center" />
+                            </Grid>
+
+                            <ScrollViewer Grid.Row="1"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding ScanFindings}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#0F1728"
+                                                    BorderBrush="#22304A"
+                                                    BorderThickness="1"
+                                                    CornerRadius="9"
+                                                    Padding="12"
+                                                    Margin="0,0,0,9">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border Grid.Column="0"
+                                                            BorderBrush="{Binding SeverityColor}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="8"
+                                                            Padding="8,4"
+                                                            VerticalAlignment="Top"
+                                                            Margin="0,0,12,0">
+                                                        <TextBlock Text="{Binding SeverityText}"
+                                                                   Foreground="{Binding SeverityColor}"
+                                                                   FontSize="11"
+                                                                   FontWeight="SemiBold" />
+                                                    </Border>
+
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding TypeText}"
+                                                                   FontSize="14"
+                                                                   FontWeight="SemiBold" />
+
+                                                        <TextBlock Text="{Binding Path}"
+                                                                   Foreground="#7FB0FF"
+                                                                   FontSize="12"
+                                                                   Margin="0,3,0,0"
+                                                                   TextTrimming="CharacterEllipsis" />
+
+                                                        <TextBlock Text="{Binding ReasonText}"
+                                                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                                                   FontSize="12"
+                                                                   LineHeight="19"
+                                                                   Margin="0,5,0,0" />
+                                                    </StackPanel>
+
+                                                    <Button Grid.Column="2"
+                                                            Content="{Binding RestoreActionText}"
+                                                            Command="{Binding DataContext.RestoreVisibilityCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}"
+                                                            Visibility="{Binding RestoreActionVisibility}"
+                                                            Style="{StaticResource SecondaryButtonStyle}"
+                                                            VerticalAlignment="Center"
+                                                            Margin="14,0,0,0" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Border>

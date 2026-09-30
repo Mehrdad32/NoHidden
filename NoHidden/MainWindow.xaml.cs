@@ -15,7 +15,6 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         LanguageComboBox.SelectedValue = LocalizationManager.CurrentLanguage;
-        FlowDirection = LocalizationManager.GetFlowDirection();
 
         _isInitializingLanguageSelection = false;
     }
@@ -31,7 +30,6 @@ public partial class MainWindow : Window
         }
 
         LocalizationManager.ChangeLanguage(cultureName);
-        FlowDirection = LocalizationManager.GetFlowDirection(cultureName);
 
         if (DataContext is MainViewModel viewModel)
         {

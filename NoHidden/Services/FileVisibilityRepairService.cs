@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace NoHidden.Services;
 
 public sealed class FileVisibilityRepairService

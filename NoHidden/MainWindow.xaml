@@ -2,151 +2,81 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:NoHidden"
-        Title="{Binding AppTitle}"
-        Height="700"
-        Width="800"
+        Title="{DynamicResource AppTitle}"
+        Width="1080"
+        Height="760"
+        MinWidth="860"
+        MinHeight="640"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="SingleBorderWindow"
-        Background="#FF2D2D30"
+        Background="#0B1220"
         Icon="pack://application:,,,/favicon.ico"
         FontFamily="pack://application:,,,/#Vazirmatn"
-        ResizeMode="NoResize">
+        ResizeMode="CanResize"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
 
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
 
     <Window.Resources>
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#0B1220" />
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#121A2A" />
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#22304A" />
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#2563EB" />
+        <SolidColorBrush x:Key="PrimaryHoverBrush" Color="#1D4ED8" />
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F8FAFC" />
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#AAB6CA" />
+        <SolidColorBrush x:Key="InputBackgroundBrush" Color="#182236" />
+        <SolidColorBrush x:Key="InputBorderBrush" Color="#31415E" />
+
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Margin" Value="5" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
-        <Style TargetType="GroupBox">
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontFamily" Value="pack://application:,,,/#Vazirmatn" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="BorderBrush" Value="#FF555555" />
-            <Setter Property="Background" Value="#FF252526" />
-            <Setter Property="Padding" Value="5" />
-            <Setter Property="Margin" Value="10" />
-        </Style>
-
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#FF3F3F41" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#FF555555" />
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="10,5" />
-            <Setter Property="Margin" Value="3,1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="20" />
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="18,10" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5"
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
                         </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF555555" />
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#FF777777" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="#FF3F3F41" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#FF555555" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="5,1" />
-            <Setter Property="Margin" Value="3" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontFamily" Value="pack://application:,,,/#Vazirmatn" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <Border x:Name="Border"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="5"
-                                    MouseLeftButtonDown="Border_MouseLeftButtonDown">
-                                <ContentPresenter x:Name="ContentSite"
-                                                  Margin="{TemplateBinding Padding}"
-                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  Content="{TemplateBinding SelectionBoxItem}"
-                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
-                            </Border>
-
-                            <ToggleButton Focusable="False"
-                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ClickMode="Press"
-                                          HorizontalAlignment="Right"
-                                          VerticalAlignment="Center"
-                                          Width="20"
-                                          Margin="0,0,5,0">
-                                <ToggleButton.Template>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Border Background="Transparent">
-                                            <Path Fill="White"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center"
-                                                  Data="M 0 0 L 4 4 L 8 0 Z" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </ToggleButton.Template>
-                            </ToggleButton>
-
-                            <Popup Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   AllowsTransparency="True"
-                                   Focusable="False"
-                                   PopupAnimation="Slide">
-                                <Border Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="5"
-                                        MinWidth="{Binding ActualWidth, ElementName=Border}">
-                                    <ScrollViewer>
-                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"
-                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#FF777777" />
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="{StaticResource PrimaryHoverBrush}" />
                             </Trigger>
-                            <Trigger Property="IsDropDownOpen" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#FF777777" />
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Opacity"
+                                        Value="0.85" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Foreground" Value="#FF888888" />
-                                <Setter TargetName="Border" Property="Background" Value="#FF2D2D30" />
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#FF555555" />
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Opacity"
+                                        Value="0.38" />
+                                <Setter Property="Cursor" Value="Arrow" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -154,147 +84,470 @@
             </Setter>
         </Style>
 
-        <Style x:Key="IconButtonStyle" TargetType="Button">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Width" Value="30" />
-            <Setter Property="Height" Value="30" />
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#182236" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="#31415E" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="13,7" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7"
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="#22304A" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Opacity"
+                                        Value="0.85" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="LinkButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="#7FB0FF" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style x:Key="IconButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Width" Value="42" />
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Padding" Value="8" />
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource InputBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource InputBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="MinHeight" Value="42" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
     </Window.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="200" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="100" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="pack://application:,,,/logo.png"
-                       Width="60"
-                       Height="60"
-                       Margin="10" />
-                <StackPanel>
-                    <TextBlock Text="{Binding AppTitle}"
-                               FontSize="24"
-                               FontWeight="Bold" />
-                    <TextBlock Text="{Binding AppVersion}"
-                               FontSize="16"
-                               FontWeight="Normal" />
-                </StackPanel>
-            </StackPanel>
-
-            <GroupBox Header="{Binding SystemInfo}">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding AutorunStatus}"
-                                   VerticalAlignment="Center" />
-                        <Button Content="{Binding DisableAutoRunText}"
-                                Command="{Binding DisableAutorunCommand}"
-                                Visibility="{Binding DisableAutoRunButtonVisibility}"
-                                Margin="10,1"
-                                Padding="10,4"
-                                FontSize="13"
-                                FontWeight="Normal" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding AntivirusStatus}"
-                                   VerticalAlignment="Center" />
-                        <Button Content="{Binding LearnMoreAboutAntiVirus}"
-                                Command="{Binding OpenAntivirusInfoCommand}"
-                                Margin="10,1"
-                                Padding="10,4"
-                                Visibility="{Binding LearnMoreButtonVisibility}"
-                                FontSize="13"
-                                FontWeight="Normal" />
-                    </StackPanel>
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
-
-        <GroupBox Grid.Row="1"
-                  Header="{Binding OperationGroupHeader}">
+        <Border Grid.Row="0"
+                Background="#0F1728"
+                BorderBrush="#1C2940"
+                BorderThickness="0,0,0,1"
+                Padding="28,18">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="0">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding SelectUsbDriveText}"
-                                   VerticalAlignment="Center"
-                                   Margin="8" />
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            FlowDirection="LeftToRight">
+                    <Border Width="58"
+                            Height="58"
+                            CornerRadius="12"
+                            Background="#070B13"
+                            Margin="0,0,16,0">
+                        <Image Source="pack://application:,,,/logo.png"
+                               Width="46"
+                               Height="46"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                    </Border>
 
-                        <ComboBox ItemsSource="{Binding RemovableDrives}"
-                                  SelectedItem="{Binding SelectedDrive, Mode=TwoWay}"
-                                  Width="230"
-                                  Margin="10,0" />
-
-                        <Button Command="{Binding RefreshDrivesCommand}"
-                                Style="{StaticResource IconButtonStyle}"
-                                ToolTip="{Binding RefreshDrivesToolTip}">
-                            <Image Source="pack://application:,,,/refresh.png"
-                                   Stretch="Uniform"
-                                   Width="25" />
-                        </Button>
+                    <StackPanel VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{DynamicResource AppTitle}"
+                                       FontSize="25"
+                                       FontWeight="Bold"
+                                       VerticalAlignment="Center" />
+                            <Border Background="#1B2A43"
+                                    CornerRadius="6"
+                                    Padding="8,3"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource AppVersion}"
+                                           FontSize="11"
+                                           Foreground="#9FB0CA" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="{DynamicResource AppSubtitle}"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="13"
+                                   Margin="0,5,0,0" />
                     </StackPanel>
-
-                    <TextBlock Text="{Binding SelectedDrive.CapacityText}"
-                               FontSize="12"
-                               Foreground="#FFBEBEBE"
-                               Margin="8,0,8,5" />
                 </StackPanel>
 
-                <GroupBox Grid.Row="1"
-                          Header="{Binding ProblemsHeader}"
-                          Margin="5">
-                    <TextBlock Text="{Binding ScanNotStartedText}"
-                               Foreground="#FFBEBEBE"
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource Language}"
+                               Foreground="{StaticResource TextSecondaryBrush}"
                                VerticalAlignment="Center"
-                               HorizontalAlignment="Center" />
-                </GroupBox>
-            </Grid>
-        </GroupBox>
-
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <GroupBox Header="{Binding LanguageHeader}"
-                      Grid.Column="0">
-                <StackPanel VerticalAlignment="Top"
-                            Margin="5">
+                               Margin="0,0,10,0" />
                     <ComboBox x:Name="LanguageComboBox"
-                              Width="150"
+                              Width="135"
                               SelectedValuePath="Tag"
                               SelectionChanged="OnLanguageChanged">
                         <ComboBoxItem Tag="en-US" Content="English" />
                         <ComboBoxItem Tag="fa-IR" Content="فارسی" />
                     </ComboBox>
                 </StackPanel>
-            </GroupBox>
+            </Grid>
+        </Border>
 
-            <GroupBox Header="{Binding MessagesTitle}"
-                      Grid.Column="1">
-                <TextBlock Text="{Binding Messages}"
-                           TextWrapping="Wrap" />
-            </GroupBox>
-        </Grid>
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid Margin="28,24,28,28">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="18" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="18" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="18" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource WindowsProtection}"
+                                           FontSize="15"
+                                           FontWeight="SemiBold" />
+                                <Border Grid.Column="1"
+                                        BorderBrush="{Binding ProtectionStatusColor}"
+                                        BorderThickness="1"
+                                        CornerRadius="10"
+                                        Padding="8,3"
+                                        Margin="8,0,0,0">
+                                    <TextBlock Text="{Binding ProtectionBadgeText}"
+                                               Foreground="{Binding ProtectionStatusColor}"
+                                               FontSize="11"
+                                               FontWeight="SemiBold" />
+                                </Border>
+                            </Grid>
+
+                            <StackPanel Grid.Row="1"
+                                        Orientation="Horizontal"
+                                        Margin="0,16,0,0">
+                                <Ellipse Width="9"
+                                         Height="9"
+                                         Fill="{Binding ProtectionStatusColor}"
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,9,0" />
+                                <TextBlock Text="{Binding AutorunStatus}"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="13"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <Button Grid.Row="3"
+                                    Content="{DynamicResource ProtectWindows}"
+                                    Command="{Binding DisableAutorunCommand}"
+                                    Visibility="{Binding DisableAutoRunButtonVisibility}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,16,0,0" />
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource AntivirusProtection}"
+                                           FontSize="15"
+                                           FontWeight="SemiBold" />
+                                <Border Grid.Column="1"
+                                        BorderBrush="{Binding AntivirusStatusColor}"
+                                        BorderThickness="1"
+                                        CornerRadius="10"
+                                        Padding="8,3"
+                                        Margin="8,0,0,0">
+                                    <TextBlock Text="{Binding AntivirusBadgeText}"
+                                               Foreground="{Binding AntivirusStatusColor}"
+                                               FontSize="11"
+                                               FontWeight="SemiBold" />
+                                </Border>
+                            </Grid>
+
+                            <StackPanel Grid.Row="1"
+                                        Orientation="Horizontal"
+                                        Margin="0,16,0,0">
+                                <Ellipse Width="9"
+                                         Height="9"
+                                         Fill="{Binding AntivirusStatusColor}"
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,9,0" />
+                                <TextBlock Text="{Binding AntivirusStatus}"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="13"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <Button Grid.Row="3"
+                                    Content="{DynamicResource LearnMore}"
+                                    Command="{Binding OpenAntivirusInfoCommand}"
+                                    Visibility="{Binding LearnMoreButtonVisibility}"
+                                    Style="{StaticResource LinkButtonStyle}"
+                                    Margin="0,16,0,0" />
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="4"
+                            Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{DynamicResource UsbDevice}"
+                                       FontSize="15"
+                                       FontWeight="SemiBold" />
+
+                            <StackPanel Grid.Row="1"
+                                        Orientation="Horizontal"
+                                        Margin="0,16,0,0">
+                                <Ellipse Width="9"
+                                         Height="9"
+                                         Fill="{Binding UsbStatusColor}"
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,9,0" />
+                                <StackPanel>
+                                    <TextBlock Text="{Binding UsbStatus}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding UsbDetails}"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               FontSize="12"
+                                               Margin="0,4,0,0" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Row="2"
+                        Style="{StaticResource CardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="1" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0"
+                              Margin="0,0,0,18">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,22,0">
+                                <TextBlock Text="{DynamicResource UsbScanner}"
+                                           FontSize="18"
+                                           FontWeight="SemiBold" />
+                                <TextBlock Text="{DynamicResource SelectUsbDrive}"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="12"
+                                           Margin="0,4,0,0" />
+                            </StackPanel>
+
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding RemovableDrives}"
+                                      SelectedItem="{Binding SelectedDrive, Mode=TwoWay}"
+                                      MinWidth="260"
+                                      MaxWidth="430"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Center" />
+
+                            <Button Grid.Column="2"
+                                    Command="{Binding RefreshDrivesCommand}"
+                                    Style="{StaticResource IconButtonStyle}"
+                                    ToolTip="{DynamicResource RefreshDrives}"
+                                    Margin="10,0,0,0">
+                                <Image Source="pack://application:,,,/refresh.png"
+                                       Width="22"
+                                       Height="22"
+                                       Stretch="Uniform" />
+                            </Button>
+
+                            <Button Grid.Column="3"
+                                    Content="{DynamicResource ScanUsb}"
+                                    Command="{Binding StartScanCommand}"
+                                    IsEnabled="{Binding HasSelectedDrive}"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Margin="12,0,0,0"
+                                    MinWidth="120" />
+                        </Grid>
+
+                        <Border Grid.Row="1"
+                                Background="#22304A" />
+
+                        <Grid Grid.Row="2"
+                              MinHeight="260">
+                            <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        MaxWidth="600">
+                                <Border Width="76"
+                                        Height="76"
+                                        CornerRadius="38"
+                                        Background="#152540"
+                                        BorderBrush="#28436D"
+                                        BorderThickness="1"
+                                        HorizontalAlignment="Center">
+                                    <TextBlock Text="USB"
+                                               FontSize="15"
+                                               FontWeight="Bold"
+                                               Foreground="#79A9FF"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FlowDirection="LeftToRight" />
+                                </Border>
+
+                                <TextBlock Text="{Binding EmptyStateTitle}"
+                                           FontSize="21"
+                                           FontWeight="SemiBold"
+                                           TextAlignment="Center"
+                                           Margin="0,18,0,0" />
+
+                                <TextBlock Text="{Binding EmptyStateDescription}"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="13"
+                                           TextAlignment="Center"
+                                           LineHeight="22"
+                                           Margin="0,9,0,0" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="4"
+                        Style="{StaticResource CardStyle}">
+                    <Grid MinHeight="110">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Width="38"
+                                Height="38"
+                                CornerRadius="19"
+                                Background="#172A47"
+                                VerticalAlignment="Top">
+                            <TextBlock Text="✓"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="#7FB0FF"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+
+                        <StackPanel Grid.Column="1"
+                                    Margin="14,0,0,0">
+                            <TextBlock Text="{DynamicResource ScanResults}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding EmptyStateTitle}"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       FontSize="13"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="6"
+                        Background="#0F1D31"
+                        BorderBrush="#1D3554"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Padding="14,11">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Ellipse Width="8"
+                                 Height="8"
+                                 Fill="#60A5FA"
+                                 VerticalAlignment="Center"
+                                 Margin="0,0,10,0" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding StatusMessage}"
+                                   Foreground="#B9C8DD"
+                                   FontSize="12"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>

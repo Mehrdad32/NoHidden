@@ -75,6 +75,9 @@ public partial class MainViewModel : ObservableObject
     private bool canStartScan;
 
     [ObservableProperty]
+    private bool isDriveInteractionEnabled = true;
+
+    [ObservableProperty]
     private string scanProgressText = string.Empty;
 
     [ObservableProperty]
@@ -154,6 +157,7 @@ public partial class MainViewModel : ObservableObject
     partial void OnIsScanningChanged(bool value)
     {
         CanStartScan = HasSelectedDrive && !value;
+        IsDriveInteractionEnabled = !value;
         CancelScanVisibility = value
             ? Visibility.Visible
             : Visibility.Collapsed;

@@ -1,33 +1,44 @@
-﻿using System.Management;
+using System.Management;
 
-namespace NoHidden.Managers
+namespace NoHidden.Managers;
+
+public static class AntivirusDetector
 {
-    public class AntivirusDetector
+    public static AntivirusInfo? GetAntivirusInfo()
     {
-        public static AntivirusInfo? GetAntivirusInfo()
+        using var searcher = new ManagementObjectSearcher(
+            @"root\SecurityCenter2",
+            "SELECT * FROM AntivirusProduct");
+
+        foreach (ManagementObject instance in searcher.Get())
         {
-            // Query WMI for installed antivirus products
-            using var searcher = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntivirusProduct");
-
-            foreach (var instance in searcher.Get())
+            return new AntivirusInfo
             {
-                var displayName = instance["displayName"]?.ToString();
-                var productState = Convert.ToInt32(instance["productState"]);
-
-                return new AntivirusInfo
-                {
-                    DisplayName = displayName,
-                    ProductState = productState
-                };
-            }
-
-            return null;
+                DisplayName = instance["displayName"]?.ToString(),
+                ProductState = Convert.ToInt32(instance["productState"]),
+                InstanceGuid = instance["instanceGuid"]?.ToString(),
+                ProductExecutablePath =
+                    instance["pathToSignedProductExe"]?.ToString(),
+                ReportingExecutablePath =
+                    instance["pathToSignedReportingExe"]?.ToString()
+            };
         }
-    }
 
-    public class AntivirusInfo
-    {
-        public string? DisplayName { get; set; }
-        public int ProductState { get; set; }
+        return null;
     }
+}
+
+public sealed class AntivirusInfo
+{
+    public string? DisplayName { get; init; }
+
+    public int ProductState { get; init; }
+
+    public string? InstanceGuid { get; init; }
+
+    public string? ProductExecutablePath { get; init; }
+
+    public string? ReportingExecutablePath { get; init; }
+
+    public string ProductStateHex => $"0x{ProductState:X6}";
 }

@@ -56,11 +56,6 @@ public static class LocalizationManager
         {
             SaveLanguage(cultureName);
         }
-
-        foreach (Window window in Application.Current.Windows)
-        {
-            window.FlowDirection = GetFlowDirection(cultureName);
-        }
     }
 
     public static FlowDirection GetFlowDirection(string? cultureName = null)

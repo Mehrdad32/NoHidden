@@ -1,72 +1,39 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 
-namespace NoHidden.Managers
+namespace NoHidden.Managers;
+
+public sealed class AutoPlayManager
 {
-    public class AutoPlayManager
+    private const string ExplorerPoliciesPath =
+        @"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer";
+
+    private const int AllDriveTypesMask = 0xFF;
+    private const int AllDriveLettersMask = 0x03FFFFFF;
+
+    public (bool IsAutorunDisabled, bool IsAutoPlayDisabled) CheckStatus()
     {
-        private const string ExplorerPoliciesPath = @"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer";
+        using RegistryKey? key =
+            Registry.CurrentUser.OpenSubKey(ExplorerPoliciesPath, writable: false);
 
-        /// <summary>
-        /// Checks the Autorun and AutoPlay status.
-        /// </summary>
-        /// <returns>A tuple containing whether Autorun is disabled and whether AutoPlay is disabled.</returns>
-        public (bool IsAutorunDisabled, bool IsAutoPlayDisabled) CheckStatus()
-        {
-            bool isAutorunDisabled = false;
-            bool isAutoPlayDisabled = false;
+        object? driveTypeValue = key?.GetValue("NoDriveTypeAutoRun");
+        object? driveLetterValue = key?.GetValue("NoDriveAutoRun");
 
-            try
-            {
-                // Check Autorun (NoDriveTypeAutoRun)
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(ExplorerPoliciesPath, false))
-                {
-                    object noDriveTypeAutoRunValue = key?.GetValue("NoDriveTypeAutoRun");
-                    if (noDriveTypeAutoRunValue != null)
-                    {
-                        int noDriveTypeAutoRun = (int)noDriveTypeAutoRunValue;
-                        isAutorunDisabled = (noDriveTypeAutoRun & 0x91) == 0x91; // Check bitmask
-                    }
-                }
+        bool isAutorunDisabled = driveTypeValue is not null &&
+            (Convert.ToInt32(driveTypeValue) & AllDriveTypesMask) == AllDriveTypesMask;
 
-                // Check AutoPlay (NoDriveAutoRun)
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(ExplorerPoliciesPath, false))
-                {
-                    object noDriveAutoRunValue = key?.GetValue("NoDriveAutoRun");
-                    if (noDriveAutoRunValue != null)
-                    {
-                        isAutoPlayDisabled = (int)noDriveAutoRunValue == 0xFF;
-                    }
-                }
-            }
-            catch
-            {
-                // Log or handle exceptions if needed
-            }
+        bool isAutoPlayDisabled = driveLetterValue is not null &&
+            (Convert.ToInt32(driveLetterValue) & AllDriveLettersMask) == AllDriveLettersMask;
 
-            return (isAutorunDisabled, isAutoPlayDisabled);
-        }
+        return (isAutorunDisabled, isAutoPlayDisabled);
+    }
 
-        /// <summary>
-        /// Disables Autorun and AutoPlay for all drives.
-        /// </summary>
-        public void DisableAutorunAndAutoPlay()
-        {
-            try
-            {
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(ExplorerPoliciesPath, true))
-                {
-                    if (key != null)
-                    {
-                        key.SetValue("NoDriveTypeAutoRun", 0x91, RegistryValueKind.DWord); // Disable Autorun
-                        key.SetValue("NoDriveAutoRun", 0xFF, RegistryValueKind.DWord);   // Disable AutoPlay
-                    }
-                }
-            }
-            catch
-            {
-                // Log or handle exceptions if needed
-                throw;
-            }
-        }
+    public void DisableAutorunAndAutoPlay()
+    {
+        using RegistryKey key =
+            Registry.CurrentUser.CreateSubKey(ExplorerPoliciesPath, writable: true)
+            ?? throw new InvalidOperationException("Unable to open the Windows Explorer policy registry key.");
+
+        key.SetValue("NoDriveTypeAutoRun", AllDriveTypesMask, RegistryValueKind.DWord);
+        key.SetValue("NoDriveAutoRun", AllDriveLettersMask, RegistryValueKind.DWord);
     }
 }

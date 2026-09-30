@@ -2,29 +2,49 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppTitle">NoHidden</sys:String>
-    <sys:String x:Key="AppVersion">نسخه ۳.۰.۰ (در حال توسعه)</sys:String>
-    <sys:String x:Key="SystemInfo">اطلاعات سیستم</sys:String>
-    <sys:String x:Key="Error">خطا: {0}</sys:String>
+    <sys:String x:Key="AppSubtitle">بازیابی و محافظت در برابر بدافزارهای USB</sys:String>
+    <sys:String x:Key="AppVersion">نسخه ۳.۰.۰ - در حال توسعه</sys:String>
 
-    <sys:String x:Key="AutorunDisabled">اجرای خودکار غیرفعال است</sys:String>
-    <sys:String x:Key="AutorunEnabled">اجرای خودکار فعال است</sys:String>
-    <sys:String x:Key="AutoPlayEnabled">پخش خودکار فعال است</sys:String>
-    <sys:String x:Key="AutoPlayDisabledGlobally">پخش خودکار غیرفعال است</sys:String>
-    <sys:String x:Key="AutorunProtectionEnabled">اجرای خودکار و پخش خودکار برای کاربر فعلی ویندوز غیرفعال شدند.</sys:String>
+    <sys:String x:Key="WindowsProtection">محافظت ویندوز</sys:String>
+    <sys:String x:Key="AntivirusProtection">آنتی‌ویروس</sys:String>
+    <sys:String x:Key="UsbDevice">حافظه USB</sys:String>
+    <sys:String x:Key="UsbScanner">بررسی حافظه USB</sys:String>
+    <sys:String x:Key="ScanResults">نتیجه بررسی</sys:String>
+
+    <sys:String x:Key="Protected">محافظت‌شده</sys:String>
+    <sys:String x:Key="Attention">نیازمند توجه</sys:String>
+    <sys:String x:Key="Detected">شناسایی شد</sys:String>
+    <sys:String x:Key="NotDetected">شناسایی نشد</sys:String>
+    <sys:String x:Key="Unknown">نامشخص</sys:String>
+
+    <sys:String x:Key="AutorunProtectionActive">AutoRun و AutoPlay برای کاربر فعلی ویندوز غیرفعال هستند.</sys:String>
+    <sys:String x:Key="AutorunProtectionRecommended">AutoRun یا AutoPlay فعال است. بهتر است قبل از باز کردن فلش‌های ناشناس محافظت ویندوز فعال شود.</sys:String>
+    <sys:String x:Key="ProtectionStatusUnavailable">وضعیت محافظت ویندوز قابل بررسی نبود.</sys:String>
+    <sys:String x:Key="AutorunProtectionEnabled">محافظت USB ویندوز با موفقیت فعال شد.</sys:String>
+    <sys:String x:Key="ProtectWindows">ایمن‌سازی ویندوز</sys:String>
 
     <sys:String x:Key="UnknownAntivirus">آنتی‌ویروس ناشناخته</sys:String>
-    <sys:String x:Key="AntivirusStatus">آنتی‌ویروس شناسایی شد: {0} (وضعیت 0x{1})</sys:String>
-    <sys:String x:Key="NotInstalled">Windows Security Center هیچ آنتی‌ویروسی را شناسایی نکرد.</sys:String>
+    <sys:String x:Key="AntivirusDetected">ویندوز، {0} را به‌عنوان آنتی‌ویروس نصب‌شده شناسایی کرده است.</sys:String>
+    <sys:String x:Key="NotInstalled">Windows Security Center هیچ آنتی‌ویروس نصب‌شده‌ای گزارش نکرد.</sys:String>
+    <sys:String x:Key="AntivirusStatusUnavailable">وضعیت آنتی‌ویروس قابل بررسی نبود.</sys:String>
+    <sys:String x:Key="LearnMore">اطلاعات بیشتر</sys:String>
 
-    <sys:String x:Key="Messages">پیام‌ها</sys:String>
-    <sys:String x:Key="OperationsGroupHeader">حافظه USB</sys:String>
-    <sys:String x:Key="SelectUsbDrive">انتخاب حافظه USB:</sys:String>
-    <sys:String x:Key="Problems">نتیجه اسکن</sys:String>
-    <sys:String x:Key="ScanNotStarted">هنوز هیچ اسکنی انجام نشده است.</sys:String>
-    <sys:String x:Key="NoRemovableDevices">در حال حاضر هیچ حافظه USB قابل‌حذفی در دسترس نیست.</sys:String>
+    <sys:String x:Key="UsbNotConnected">هیچ حافظه USB شناسایی نشد</sys:String>
+    <sys:String x:Key="UsbConnectHint">برای شروع یک حافظه USB قابل‌حذف متصل کنید.</sys:String>
+    <sys:String x:Key="SelectUsbDrive">انتخاب حافظه USB</sys:String>
     <sys:String x:Key="RefreshDrives">بازخوانی حافظه‌ها</sys:String>
-    <sys:String x:Key="Language">زبان / Language</sys:String>
+    <sys:String x:Key="UsbRefreshed">فهرست حافظه‌های USB بازخوانی شد.</sys:String>
+    <sys:String x:Key="NoRemovableDevices">در حال حاضر هیچ حافظه USB قابل‌حذفی در دسترس نیست.</sys:String>
 
-    <sys:String x:Key="ClickToDisableAutoRun">غیرفعال کردن AutoRun و AutoPlay</sys:String>
-    <sys:String x:Key="ClickToLearnMoreAboutAntiVirus">چرا آنتی‌ویروس مهم است؟</sys:String>
+    <sys:String x:Key="EmptyStateNoUsbTitle">یک حافظه USB متصل کنید</sys:String>
+    <sys:String x:Key="EmptyStateNoUsbDescription">NoHidden فایل‌های مخفی‌شده، میانبرهای مشکوک، فایل‌های Autorun و اسکریپت‌های بالقوه خطرناک را بررسی خواهد کرد.</sys:String>
+    <sys:String x:Key="EmptyStateReadyTitle">آماده بررسی</sys:String>
+    <sys:String x:Key="EmptyStateReadyDescription">حافظه انتخاب‌شده آماده است. اسکن هیچ فایلی را تغییر نمی‌دهد مگر اینکه خودتان عملیات ترمیم را تأیید کنید.</sys:String>
+    <sys:String x:Key="ScanUsb">بررسی حافظه USB</sys:String>
+    <sys:String x:Key="ScannerComingNext">موتور جدید اسکن در فاز بعدی توسعه اضافه می‌شود.</sys:String>
+
+    <sys:String x:Key="ReadyStatus">NoHidden آماده است. بدون تأیید شما هیچ فایلی تغییر نخواهد کرد.</sys:String>
+    <sys:String x:Key="Language">زبان</sys:String>
+    <sys:String x:Key="Status">وضعیت</sys:String>
+    <sys:String x:Key="Error">خطا: {0}</sys:String>
 </ResourceDictionary>

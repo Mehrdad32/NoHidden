@@ -47,4 +47,16 @@
     <sys:String x:Key="Language">زبان</sys:String>
     <sys:String x:Key="Status">وضعیت</sys:String>
     <sys:String x:Key="Error">خطا: {0}</sys:String>
+
+    <sys:String x:Key="ApplicationAlreadyRunning">NoHidden هم‌اکنون در حال اجرا است.</sys:String>
+
+    <sys:String x:Key="AdminPermissionTitle">دسترسی مدیر سیستم لازم است</sys:String>
+    <sys:String x:Key="AdminPermissionSubtitle">برای تغییر تنظیمات محافظتی ویندوز</sys:String>
+    <sys:String x:Key="AdminPermissionDescription">برای غیرفعال کردن AutoRun و AutoPlay در سطح سیستم، NoHidden باید یک‌بار با مجوز Administrator دوباره اجرا شود. پس از تأیید، برنامه بسته می‌شود، پنجره استاندارد UAC ویندوز نمایش داده می‌شود و عملیات به‌صورت خودکار ادامه پیدا می‌کند.</sys:String>
+    <sys:String x:Key="AdminPermissionNote">NoHidden فقط تنظیمات مرتبط با AutoRun و AutoPlay را تغییر می‌دهد و این مرحله هیچ فایلی را روی حافظه‌های USB حذف یا ویرایش نمی‌کند.</sys:String>
+    <sys:String x:Key="RestartAsAdministrator">اجرای مجدد با دسترسی ادمین</sys:String>
+    <sys:String x:Key="Cancel">انصراف</sys:String>
+    <sys:String x:Key="AdminPermissionCanceled">عملیات لغو شد و هیچ تنظیمی تغییر نکرد.</sys:String>
+    <sys:String x:Key="AdminElevationFailed">NoHidden با دسترسی Administrator اجرا نشده است و امکان اعمال محافظت وجود ندارد.</sys:String>
+    <sys:String x:Key="AdminElevationRequired">برای اعمال این تنظیمات، دسترسی Administrator لازم است.</sys:String>
 </ResourceDictionary>

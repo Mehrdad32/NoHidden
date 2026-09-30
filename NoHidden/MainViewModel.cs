@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using NoHidden.Managers;
 using NoHidden.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 
 namespace NoHidden;
@@ -12,6 +11,7 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly AutoPlayManager _autoPlayManager = new();
     private readonly DriveManager _driveManager = new();
+    private AntivirusInfo? _currentAntivirusInfo;
 
     [ObservableProperty]
     private string autorunStatus = string.Empty;
@@ -164,6 +164,7 @@ public partial class MainViewModel : ObservableObject
         try
         {
             AntivirusInfo? antivirusInfo = AntivirusDetector.GetAntivirusInfo();
+            _currentAntivirusInfo = antivirusInfo;
 
             if (antivirusInfo is null)
             {
@@ -259,21 +260,12 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void OpenAntivirusInfo()
     {
-        try
+        var dialog = new AntivirusDetailsDialog(_currentAntivirusInfo)
         {
-            const string url =
-                "https://www.mehrdad32.ir/7042/why-antivirus-is-important-now/";
+            Owner = Application.Current.MainWindow
+        };
 
-            Process.Start(
-                new ProcessStartInfo(url)
-                {
-                    UseShellExecute = true
-                });
-        }
-        catch (Exception ex)
-        {
-            SetErrorStatus(ex);
-        }
+        dialog.ShowDialog();
     }
 
     [RelayCommand]

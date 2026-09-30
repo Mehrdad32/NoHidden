@@ -559,14 +559,14 @@
                                   MaxWidth="430"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Center"
-                                  IsEnabled="{Binding CanStartScan}" />
+                                  IsEnabled="{Binding IsDriveInteractionEnabled}" />
 
                         <Button Grid.Column="2"
                                 Command="{Binding RefreshDrivesCommand}"
                                 Style="{StaticResource IconButtonStyle}"
                                 ToolTip="{DynamicResource RefreshDrives}"
                                 Margin="10,0,0,0"
-                                IsEnabled="{Binding CanStartScan}">
+                                IsEnabled="{Binding IsDriveInteractionEnabled}">
                             <Image Source="pack://application:,,,/refresh.png"
                                    Width="22"
                                    Height="22"

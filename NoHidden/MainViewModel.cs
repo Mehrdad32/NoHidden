@@ -50,6 +50,12 @@ public partial class MainViewModel : ObservableObject
     private string statusMessage = string.Empty;
 
     [ObservableProperty]
+    private FlowDirection contentFlowDirection = FlowDirection.LeftToRight;
+
+    private string _statusMessageResourceKey = "ReadyStatus";
+    private string? _statusMessageDetail;
+
+    [ObservableProperty]
     private ObservableCollection<UsbDriveInfo> removableDrives = [];
 
     [ObservableProperty]
@@ -68,14 +74,15 @@ public partial class MainViewModel : ObservableObject
     {
         ReloadLocalization();
         LoadDrives();
-        StatusMessage = Resource("ReadyStatus");
     }
 
     public void ReloadLocalization()
     {
+        ContentFlowDirection = LocalizationManager.GetFlowDirection();
         CheckAutorunStatus();
         CheckAntivirusStatus();
         UpdateUsbState();
+        RefreshStatusMessage();
     }
 
     partial void OnSelectedDriveChanged(UsbDriveInfo? value)
@@ -148,7 +155,7 @@ public partial class MainViewModel : ObservableObject
             ProtectionBadgeText = Resource("Unknown");
             ProtectionStatusColor = "#64748B";
             AutorunStatus = Resource("ProtectionStatusUnavailable");
-            StatusMessage = FormatError(ex);
+            SetErrorStatus(ex);
         }
     }
 
@@ -181,7 +188,7 @@ public partial class MainViewModel : ObservableObject
             AntivirusStatusColor = "#64748B";
             AntivirusStatus = Resource("AntivirusStatusUnavailable");
             LearnMoreButtonVisibility = Visibility.Visible;
-            StatusMessage = FormatError(ex);
+            SetErrorStatus(ex);
         }
     }
 
@@ -192,11 +199,11 @@ public partial class MainViewModel : ObservableObject
         {
             _autoPlayManager.DisableAutorunAndAutoPlay();
             CheckAutorunStatus();
-            StatusMessage = Resource("AutorunProtectionEnabled");
+            SetStatusMessage("AutorunProtectionEnabled");
         }
         catch (Exception ex)
         {
-            StatusMessage = FormatError(ex);
+            SetErrorStatus(ex);
         }
     }
 
@@ -216,7 +223,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            StatusMessage = FormatError(ex);
+            SetErrorStatus(ex);
         }
     }
 
@@ -225,24 +232,42 @@ public partial class MainViewModel : ObservableObject
     {
         LoadDrives();
 
-        StatusMessage = HasSelectedDrive
-            ? Resource("UsbRefreshed")
-            : Resource("NoRemovableDevices");
+        SetStatusMessage(
+            HasSelectedDrive
+                ? "UsbRefreshed"
+                : "NoRemovableDevices");
     }
 
     [RelayCommand]
     private void StartScan()
     {
-        StatusMessage = Resource("ScannerComingNext");
+        SetStatusMessage("ScannerComingNext");
+    }
+
+    private void SetStatusMessage(string resourceKey)
+    {
+        _statusMessageResourceKey = resourceKey;
+        _statusMessageDetail = null;
+        RefreshStatusMessage();
+    }
+
+    private void SetErrorStatus(Exception exception)
+    {
+        _statusMessageResourceKey = "Error";
+        _statusMessageDetail = exception.Message;
+        RefreshStatusMessage();
+    }
+
+    private void RefreshStatusMessage()
+    {
+        StatusMessage = _statusMessageResourceKey == "Error" &&
+                        !string.IsNullOrWhiteSpace(_statusMessageDetail)
+            ? string.Format(Resource("Error"), _statusMessageDetail)
+            : Resource(_statusMessageResourceKey);
     }
 
     private static string Resource(string key)
     {
         return Application.Current.TryFindResource(key) as string ?? key;
-    }
-
-    private static string FormatError(Exception exception)
-    {
-        return string.Format(Resource("Error"), exception.Message);
     }
 }

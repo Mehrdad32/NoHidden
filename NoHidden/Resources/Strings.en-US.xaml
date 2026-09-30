@@ -2,29 +2,49 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppTitle">NoHidden</sys:String>
-    <sys:String x:Key="AppVersion">v3.0.0 (Development)</sys:String>
-    <sys:String x:Key="SystemInfo">System information</sys:String>
-    <sys:String x:Key="Error">Error: {0}</sys:String>
+    <sys:String x:Key="AppSubtitle">USB malware recovery &amp; protection</sys:String>
+    <sys:String x:Key="AppVersion">v3.0.0 Development</sys:String>
 
-    <sys:String x:Key="AutorunDisabled">AutoRun is disabled</sys:String>
-    <sys:String x:Key="AutorunEnabled">AutoRun is enabled</sys:String>
-    <sys:String x:Key="AutoPlayEnabled">AutoPlay is enabled</sys:String>
-    <sys:String x:Key="AutoPlayDisabledGlobally">AutoPlay is disabled</sys:String>
-    <sys:String x:Key="AutorunProtectionEnabled">AutoRun and AutoPlay have been disabled for this Windows user.</sys:String>
+    <sys:String x:Key="WindowsProtection">Windows protection</sys:String>
+    <sys:String x:Key="AntivirusProtection">Antivirus</sys:String>
+    <sys:String x:Key="UsbDevice">USB device</sys:String>
+    <sys:String x:Key="UsbScanner">USB scanner</sys:String>
+    <sys:String x:Key="ScanResults">Results</sys:String>
+
+    <sys:String x:Key="Protected">Protected</sys:String>
+    <sys:String x:Key="Attention">Needs attention</sys:String>
+    <sys:String x:Key="Detected">Detected</sys:String>
+    <sys:String x:Key="NotDetected">Not detected</sys:String>
+    <sys:String x:Key="Unknown">Unknown</sys:String>
+
+    <sys:String x:Key="AutorunProtectionActive">AutoRun and AutoPlay are disabled for this Windows user.</sys:String>
+    <sys:String x:Key="AutorunProtectionRecommended">AutoRun or AutoPlay is enabled. Protection is recommended before opening unknown USB drives.</sys:String>
+    <sys:String x:Key="ProtectionStatusUnavailable">Windows protection status could not be checked.</sys:String>
+    <sys:String x:Key="AutorunProtectionEnabled">Windows USB protection was enabled successfully.</sys:String>
+    <sys:String x:Key="ProtectWindows">Protect Windows</sys:String>
 
     <sys:String x:Key="UnknownAntivirus">Unknown antivirus</sys:String>
-    <sys:String x:Key="AntivirusStatus">Antivirus detected: {0} (state 0x{1})</sys:String>
-    <sys:String x:Key="NotInstalled">No antivirus product was detected by Windows Security Center.</sys:String>
+    <sys:String x:Key="AntivirusDetected">Windows reports {0} as an installed antivirus product.</sys:String>
+    <sys:String x:Key="NotInstalled">Windows Security Center did not report an installed antivirus product.</sys:String>
+    <sys:String x:Key="AntivirusStatusUnavailable">Antivirus status could not be checked.</sys:String>
+    <sys:String x:Key="LearnMore">Learn more</sys:String>
 
-    <sys:String x:Key="Messages">Messages</sys:String>
-    <sys:String x:Key="OperationsGroupHeader">USB drive</sys:String>
-    <sys:String x:Key="SelectUsbDrive">Select USB drive:</sys:String>
-    <sys:String x:Key="Problems">Scan results</sys:String>
-    <sys:String x:Key="ScanNotStarted">No scan has been started yet.</sys:String>
-    <sys:String x:Key="NoRemovableDevices">No removable USB drive is currently available.</sys:String>
+    <sys:String x:Key="UsbNotConnected">No USB drive detected</sys:String>
+    <sys:String x:Key="UsbConnectHint">Connect a removable USB drive to begin.</sys:String>
+    <sys:String x:Key="SelectUsbDrive">Choose a USB drive</sys:String>
     <sys:String x:Key="RefreshDrives">Refresh drives</sys:String>
-    <sys:String x:Key="Language">Language / زبان</sys:String>
+    <sys:String x:Key="UsbRefreshed">USB drive list refreshed.</sys:String>
+    <sys:String x:Key="NoRemovableDevices">No removable USB drive is currently available.</sys:String>
 
-    <sys:String x:Key="ClickToDisableAutoRun">Disable AutoRun &amp; AutoPlay</sys:String>
-    <sys:String x:Key="ClickToLearnMoreAboutAntiVirus">Why antivirus protection matters</sys:String>
+    <sys:String x:Key="EmptyStateNoUsbTitle">Connect a USB drive</sys:String>
+    <sys:String x:Key="EmptyStateNoUsbDescription">NoHidden will look for hidden files, suspicious shortcuts, autorun entries and potentially dangerous scripts.</sys:String>
+    <sys:String x:Key="EmptyStateReadyTitle">Ready to scan</sys:String>
+    <sys:String x:Key="EmptyStateReadyDescription">The selected drive is ready. Scanning will not modify files unless you explicitly choose a repair action.</sys:String>
+    <sys:String x:Key="ScanUsb">Scan USB</sys:String>
+    <sys:String x:Key="ScannerComingNext">The new scanner engine is the next development phase.</sys:String>
+
+    <sys:String x:Key="ReadyStatus">NoHidden is ready. No files will be changed without your confirmation.</sys:String>
+    <sys:String x:Key="Language">Language</sys:String>
+    <sys:String x:Key="Status">Status</sys:String>
+    <sys:String x:Key="Error">Error: {0}</sys:String>
 </ResourceDictionary>

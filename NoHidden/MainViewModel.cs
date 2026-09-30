@@ -121,6 +121,8 @@ public partial class MainViewModel : ObservableObject
 
     private string _statusMessageResourceKey = "ReadyStatus";
     private string? _statusMessageDetail;
+    private string _emptyStateTitleResourceKey = "EmptyStateNoUsbTitle";
+    private string _emptyStateDescriptionResourceKey = "EmptyStateNoUsbDescription";
 
     public MainViewModel()
     {
@@ -133,7 +135,8 @@ public partial class MainViewModel : ObservableObject
         ContentFlowDirection = LocalizationManager.GetFlowDirection();
         CheckAutorunStatus();
         CheckAntivirusStatus();
-        UpdateUsbState();
+        UpdateUsbState(updateEmptyState: false);
+        RefreshEmptyStateLocalization();
 
         foreach (ScanFindingViewModel finding in ScanFindings)
         {
@@ -182,7 +185,7 @@ public partial class MainViewModel : ObservableObject
         UpdateUsbState();
     }
 
-    private void UpdateUsbState()
+    private void UpdateUsbState(bool updateEmptyState = true)
     {
         HasSelectedDrive = SelectedDrive is not null;
         CanStartScan = HasSelectedDrive && !IsScanning;
@@ -192,16 +195,27 @@ public partial class MainViewModel : ObservableObject
             UsbStatus = Resource("UsbNotConnected");
             UsbDetails = Resource("UsbConnectHint");
             UsbStatusColor = "#64748B";
-            EmptyStateTitle = Resource("EmptyStateNoUsbTitle");
-            EmptyStateDescription = Resource("EmptyStateNoUsbDescription");
+
+            if (updateEmptyState)
+            {
+                SetEmptyState(
+                    "EmptyStateNoUsbTitle",
+                    "EmptyStateNoUsbDescription");
+            }
+
             return;
         }
 
         UsbStatus = SelectedDrive.DisplayName;
         UsbDetails = $"{SelectedDrive.DriveFormat}  •  {SelectedDrive.CapacityText}";
         UsbStatusColor = "#3B82F6";
-        EmptyStateTitle = Resource("EmptyStateReadyTitle");
-        EmptyStateDescription = Resource("EmptyStateReadyDescription");
+
+        if (updateEmptyState)
+        {
+            SetEmptyState(
+                "EmptyStateReadyTitle",
+                "EmptyStateReadyDescription");
+        }
     }
 
     private void CheckAutorunStatus()
@@ -405,8 +419,9 @@ public partial class MainViewModel : ObservableObject
 
             if (ScanFindings.Count == 0)
             {
-                EmptyStateTitle = Resource("ScanCleanTitle");
-                EmptyStateDescription = Resource("ScanCleanDescription");
+                SetEmptyState(
+                    "ScanCleanTitle",
+                    "ScanCleanDescription");
                 ScanEmptyStateVisibility = Visibility.Visible;
                 ScanResultsVisibility = Visibility.Collapsed;
                 SetStatusMessage("ScanCompletedClean");
@@ -428,8 +443,9 @@ public partial class MainViewModel : ObservableObject
             ScanProgressVisibility = Visibility.Collapsed;
             ScanResultsVisibility = Visibility.Collapsed;
             ScanEmptyStateVisibility = Visibility.Visible;
-            EmptyStateTitle = Resource("ScanCanceledTitle");
-            EmptyStateDescription = Resource("ScanCanceledDescription");
+            SetEmptyState(
+                "ScanCanceledTitle",
+                "ScanCanceledDescription");
             SetStatusMessage("ScanCanceledStatus");
         }
         catch (Exception ex)
@@ -437,8 +453,9 @@ public partial class MainViewModel : ObservableObject
             ScanProgressVisibility = Visibility.Collapsed;
             ScanResultsVisibility = Visibility.Collapsed;
             ScanEmptyStateVisibility = Visibility.Visible;
-            EmptyStateTitle = Resource("ScanFailedTitle");
-            EmptyStateDescription = Resource("ScanFailedDescription");
+            SetEmptyState(
+                "ScanFailedTitle",
+                "ScanFailedDescription");
             SetErrorStatus(ex);
         }
         finally
@@ -537,8 +554,9 @@ public partial class MainViewModel : ObservableObject
         {
             ScanResultsVisibility = Visibility.Collapsed;
             ScanEmptyStateVisibility = Visibility.Visible;
-            EmptyStateTitle = Resource("ScanCleanTitle");
-            EmptyStateDescription = Resource("ScanCleanDescription");
+            SetEmptyState(
+                "ScanCleanTitle",
+                "ScanCleanDescription");
         }
     }
 
@@ -587,6 +605,21 @@ public partial class MainViewModel : ObservableObject
             ScanFindings.Count,
             RecoverableCount,
             HighRiskCount);
+    }
+
+    private void SetEmptyState(
+        string titleResourceKey,
+        string descriptionResourceKey)
+    {
+        _emptyStateTitleResourceKey = titleResourceKey;
+        _emptyStateDescriptionResourceKey = descriptionResourceKey;
+        RefreshEmptyStateLocalization();
+    }
+
+    private void RefreshEmptyStateLocalization()
+    {
+        EmptyStateTitle = Resource(_emptyStateTitleResourceKey);
+        EmptyStateDescription = Resource(_emptyStateDescriptionResourceKey);
     }
 
     private void SetStatusMessage(string resourceKey)

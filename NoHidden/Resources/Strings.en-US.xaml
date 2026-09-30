@@ -27,7 +27,7 @@
     <sys:String x:Key="AntivirusDetected">Windows reports {0} as an installed antivirus product.</sys:String>
     <sys:String x:Key="NotInstalled">Windows Security Center did not report an installed antivirus product.</sys:String>
     <sys:String x:Key="AntivirusStatusUnavailable">Antivirus status could not be checked.</sys:String>
-    <sys:String x:Key="LearnMore">Learn more</sys:String>
+    <sys:String x:Key="LearnMore">Details</sys:String>
 
     <sys:String x:Key="UsbNotConnected">No USB drive detected</sys:String>
     <sys:String x:Key="UsbConnectHint">Connect a removable USB drive to begin.</sys:String>
@@ -59,4 +59,17 @@
     <sys:String x:Key="AdminPermissionCanceled">The operation was canceled. No settings were changed.</sys:String>
     <sys:String x:Key="AdminElevationFailed">NoHidden is not running with Administrator permission, so protection could not be applied.</sys:String>
     <sys:String x:Key="AdminElevationRequired">Administrator permission is required to apply these settings.</sys:String>
+
+    <sys:String x:Key="AntivirusDetailsTitle">Antivirus details</sys:String>
+    <sys:String x:Key="AntivirusDetailsSubtitle">Information reported by Windows about the security product</sys:String>
+    <sys:String x:Key="AntivirusProductLabel">Product</sys:String>
+    <sys:String x:Key="AntivirusSourceLabel">Information source</sys:String>
+    <sys:String x:Key="AntivirusSourceValue">Windows Security Center</sys:String>
+    <sys:String x:Key="AntivirusStateCodeLabel">Technical state code</sys:String>
+    <sys:String x:Key="AntivirusDetailsExplanation">NoHidden uses Windows Security Center to identify the registered security product. Detection means Windows recognizes the product as antivirus software; by itself, this does not guarantee that every protection feature, definition update, or real-time protection setting is enabled.</sys:String>
+    <sys:String x:Key="AntivirusTechnicalNote">The state code is shown only for diagnostics. It is not a security score or health percentage.</sys:String>
+    <sys:String x:Key="NoAntivirusProduct">No antivirus product detected</sys:String>
+    <sys:String x:Key="NotAvailable">Not available</sys:String>
+    <sys:String x:Key="Close">Close</sys:String>
+    <sys:String x:Key="LearnMoreOnline">Read more online</sys:String>
 </ResourceDictionary>

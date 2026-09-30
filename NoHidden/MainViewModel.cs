@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoHidden.Managers;
 using NoHidden.Models;
+using NoHidden.Services;
+using NoHidden.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -11,7 +13,12 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly AutoPlayManager _autoPlayManager = new();
     private readonly DriveManager _driveManager = new();
+    private readonly UsbScanner _usbScanner = new();
+    private readonly FileVisibilityRepairService _visibilityRepairService = new();
+
     private AntivirusInfo? _currentAntivirusInfo;
+    private CancellationTokenSource? _scanCancellationTokenSource;
+    private ScanReport? _lastScanReport;
 
     [ObservableProperty]
     private string autorunStatus = string.Empty;
@@ -52,9 +59,6 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private FlowDirection contentFlowDirection = FlowDirection.LeftToRight;
 
-    private string _statusMessageResourceKey = "ReadyStatus";
-    private string? _statusMessageDetail;
-
     [ObservableProperty]
     private ObservableCollection<UsbDriveInfo> removableDrives = [];
 
@@ -65,10 +69,55 @@ public partial class MainViewModel : ObservableObject
     private bool hasSelectedDrive;
 
     [ObservableProperty]
+    private bool isScanning;
+
+    [ObservableProperty]
+    private bool canStartScan;
+
+    [ObservableProperty]
+    private string scanProgressText = string.Empty;
+
+    [ObservableProperty]
+    private string scanSummaryText = string.Empty;
+
+    [ObservableProperty]
+    private int scannedItemsCount;
+
+    [ObservableProperty]
+    private int recoverableCount;
+
+    [ObservableProperty]
+    private int highRiskCount;
+
+    [ObservableProperty]
+    private int suspiciousCount;
+
+    [ObservableProperty]
+    private Visibility scanEmptyStateVisibility = Visibility.Visible;
+
+    [ObservableProperty]
+    private Visibility scanProgressVisibility = Visibility.Collapsed;
+
+    [ObservableProperty]
+    private Visibility scanResultsVisibility = Visibility.Collapsed;
+
+    [ObservableProperty]
+    private Visibility restoreAllVisibility = Visibility.Collapsed;
+
+    [ObservableProperty]
+    private Visibility cancelScanVisibility = Visibility.Collapsed;
+
+    [ObservableProperty]
+    private ObservableCollection<ScanFindingViewModel> scanFindings = [];
+
+    [ObservableProperty]
     private Visibility disableAutoRunButtonVisibility = Visibility.Visible;
 
     [ObservableProperty]
     private Visibility learnMoreButtonVisibility = Visibility.Visible;
+
+    private string _statusMessageResourceKey = "ReadyStatus";
+    private string? _statusMessageDetail;
 
     public MainViewModel()
     {
@@ -82,12 +131,32 @@ public partial class MainViewModel : ObservableObject
         CheckAutorunStatus();
         CheckAntivirusStatus();
         UpdateUsbState();
+
+        foreach (ScanFindingViewModel finding in ScanFindings)
+        {
+            finding.RefreshLocalization();
+        }
+
+        RefreshScanSummary();
         RefreshStatusMessage();
     }
 
     partial void OnSelectedDriveChanged(UsbDriveInfo? value)
     {
         UpdateUsbState();
+
+        if (!IsScanning)
+        {
+            ResetScanPresentation();
+        }
+    }
+
+    partial void OnIsScanningChanged(bool value)
+    {
+        CanStartScan = HasSelectedDrive && !value;
+        CancelScanVisibility = value
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     private void LoadDrives()
@@ -112,6 +181,7 @@ public partial class MainViewModel : ObservableObject
     private void UpdateUsbState()
     {
         HasSelectedDrive = SelectedDrive is not null;
+        CanStartScan = HasSelectedDrive && !IsScanning;
 
         if (SelectedDrive is null)
         {
@@ -279,10 +349,240 @@ public partial class MainViewModel : ObservableObject
                 : "NoRemovableDevices");
     }
 
-    [RelayCommand]
-    private void StartScan()
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    private async Task StartScanAsync()
     {
-        SetStatusMessage("ScannerComingNext");
+        UsbDriveInfo? drive = SelectedDrive;
+
+        if (drive is null || IsScanning)
+        {
+            return;
+        }
+
+        ResetScanPresentation();
+        IsScanning = true;
+        ScanEmptyStateVisibility = Visibility.Collapsed;
+        ScanProgressVisibility = Visibility.Visible;
+        SetStatusMessage("ScanningStatus");
+
+        _scanCancellationTokenSource?.Dispose();
+        _scanCancellationTokenSource = new CancellationTokenSource();
+
+        var progress = new Progress<ScanProgress>(
+            value =>
+            {
+                ScannedItemsCount = value.ScannedItems;
+                ScanProgressText = string.Format(
+                    Resource("ScanningProgress"),
+                    value.ScannedItems,
+                    value.CurrentPath);
+            });
+
+        try
+        {
+            ScanReport report = await _usbScanner.ScanAsync(
+                drive.RootPath,
+                progress,
+                _scanCancellationTokenSource.Token);
+
+            _lastScanReport = report;
+            ScannedItemsCount = report.ScannedItems;
+            RecoverableCount = report.RecoverableCount;
+            HighRiskCount = report.HighRiskCount;
+            SuspiciousCount = report.SuspiciousCount;
+
+            ScanFindings = new ObservableCollection<ScanFindingViewModel>(
+                report.Findings
+                    .OrderByDescending(finding => finding.Severity)
+                    .ThenBy(finding => finding.RelativePath)
+                    .Select(finding => new ScanFindingViewModel(finding)));
+
+            ScanProgressVisibility = Visibility.Collapsed;
+
+            if (ScanFindings.Count == 0)
+            {
+                EmptyStateTitle = Resource("ScanCleanTitle");
+                EmptyStateDescription = Resource("ScanCleanDescription");
+                ScanEmptyStateVisibility = Visibility.Visible;
+                ScanResultsVisibility = Visibility.Collapsed;
+                SetStatusMessage("ScanCompletedClean");
+            }
+            else
+            {
+                ScanEmptyStateVisibility = Visibility.Collapsed;
+                ScanResultsVisibility = Visibility.Visible;
+                RestoreAllVisibility = RecoverableCount > 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+                SetStatusMessage("ScanCompletedWithFindings");
+            }
+
+            RefreshScanSummary();
+        }
+        catch (OperationCanceledException)
+        {
+            ScanProgressVisibility = Visibility.Collapsed;
+            ScanResultsVisibility = Visibility.Collapsed;
+            ScanEmptyStateVisibility = Visibility.Visible;
+            EmptyStateTitle = Resource("ScanCanceledTitle");
+            EmptyStateDescription = Resource("ScanCanceledDescription");
+            SetStatusMessage("ScanCanceledStatus");
+        }
+        catch (Exception ex)
+        {
+            ScanProgressVisibility = Visibility.Collapsed;
+            ScanResultsVisibility = Visibility.Collapsed;
+            ScanEmptyStateVisibility = Visibility.Visible;
+            EmptyStateTitle = Resource("ScanFailedTitle");
+            EmptyStateDescription = Resource("ScanFailedDescription");
+            SetErrorStatus(ex);
+        }
+        finally
+        {
+            IsScanning = false;
+        }
+    }
+
+    [RelayCommand]
+    private void CancelScan()
+    {
+        _scanCancellationTokenSource?.Cancel();
+    }
+
+    [RelayCommand]
+    private void RestoreVisibility(ScanFindingViewModel? item)
+    {
+        if (item is null ||
+            !item.CanRestoreVisibility ||
+            SelectedDrive is null)
+        {
+            return;
+        }
+
+        try
+        {
+            _visibilityRepairService.RestoreVisibility(
+                SelectedDrive.RootPath,
+                item.Finding.Path);
+
+            RemoveFinding(item);
+            SetStatusMessage("VisibilityRestored");
+        }
+        catch (Exception ex)
+        {
+            SetErrorStatus(ex);
+        }
+    }
+
+    [RelayCommand]
+    private void RestoreAllVisibleItems()
+    {
+        if (SelectedDrive is null)
+        {
+            return;
+        }
+
+        List<ScanFindingViewModel> recoverableItems =
+            ScanFindings
+                .Where(item => item.CanRestoreVisibility)
+                .ToList();
+
+        int restored = 0;
+        int failed = 0;
+
+        foreach (ScanFindingViewModel item in recoverableItems)
+        {
+            try
+            {
+                _visibilityRepairService.RestoreVisibility(
+                    SelectedDrive.RootPath,
+                    item.Finding.Path);
+
+                ScanFindings.Remove(item);
+                restored++;
+            }
+            catch
+            {
+                failed++;
+            }
+        }
+
+        RecalculateFindingCounts();
+
+        if (failed == 0)
+        {
+            SetStatusMessage(
+                restored == 1
+                    ? "VisibilityRestored"
+                    : "VisibilityRestoredMultiple");
+        }
+        else
+        {
+            _statusMessageResourceKey = "VisibilityRestorePartial";
+            _statusMessageDetail = $"{restored}|{failed}";
+            RefreshStatusMessage();
+        }
+    }
+
+    private void RemoveFinding(ScanFindingViewModel item)
+    {
+        ScanFindings.Remove(item);
+        RecalculateFindingCounts();
+
+        if (ScanFindings.Count == 0)
+        {
+            ScanResultsVisibility = Visibility.Collapsed;
+            ScanEmptyStateVisibility = Visibility.Visible;
+            EmptyStateTitle = Resource("ScanCleanTitle");
+            EmptyStateDescription = Resource("ScanCleanDescription");
+        }
+    }
+
+    private void RecalculateFindingCounts()
+    {
+        RecoverableCount =
+            ScanFindings.Count(item => item.CanRestoreVisibility);
+
+        HighRiskCount =
+            ScanFindings.Count(
+                item => item.Finding.Severity >= FindingSeverity.High);
+
+        SuspiciousCount =
+            ScanFindings.Count(
+                item => item.Finding.Severity is FindingSeverity.Medium or FindingSeverity.Low);
+
+        RestoreAllVisibility = RecoverableCount > 0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        RefreshScanSummary();
+    }
+
+    private void ResetScanPresentation()
+    {
+        _lastScanReport = null;
+        ScanFindings.Clear();
+        ScannedItemsCount = 0;
+        RecoverableCount = 0;
+        HighRiskCount = 0;
+        SuspiciousCount = 0;
+        ScanProgressText = string.Empty;
+        ScanSummaryText = string.Empty;
+        ScanProgressVisibility = Visibility.Collapsed;
+        ScanResultsVisibility = Visibility.Collapsed;
+        RestoreAllVisibility = Visibility.Collapsed;
+        ScanEmptyStateVisibility = Visibility.Visible;
+        UpdateUsbState();
+    }
+
+    private void RefreshScanSummary()
+    {
+        ScanSummaryText = string.Format(
+            Resource("ScanSummary"),
+            ScannedItemsCount,
+            ScanFindings.Count,
+            RecoverableCount,
+            HighRiskCount);
     }
 
     private void SetStatusMessage(string resourceKey)
@@ -301,10 +601,33 @@ public partial class MainViewModel : ObservableObject
 
     private void RefreshStatusMessage()
     {
-        StatusMessage = _statusMessageResourceKey == "Error" &&
-                        !string.IsNullOrWhiteSpace(_statusMessageDetail)
-            ? string.Format(Resource("Error"), _statusMessageDetail)
-            : Resource(_statusMessageResourceKey);
+        if (_statusMessageResourceKey == "Error" &&
+            !string.IsNullOrWhiteSpace(_statusMessageDetail))
+        {
+            StatusMessage = string.Format(
+                Resource("Error"),
+                _statusMessageDetail);
+
+            return;
+        }
+
+        if (_statusMessageResourceKey == "VisibilityRestorePartial" &&
+            !string.IsNullOrWhiteSpace(_statusMessageDetail))
+        {
+            string[] parts = _statusMessageDetail.Split('|');
+
+            if (parts.Length == 2)
+            {
+                StatusMessage = string.Format(
+                    Resource("VisibilityRestorePartial"),
+                    parts[0],
+                    parts[1]);
+
+                return;
+            }
+        }
+
+        StatusMessage = Resource(_statusMessageResourceKey);
     }
 
     private static string Resource(string key)

@@ -27,7 +27,7 @@
     <sys:String x:Key="AntivirusDetected">ویندوز، {0} را به‌عنوان آنتی‌ویروس نصب‌شده شناسایی کرده است.</sys:String>
     <sys:String x:Key="NotInstalled">Windows Security Center هیچ آنتی‌ویروس نصب‌شده‌ای گزارش نکرد.</sys:String>
     <sys:String x:Key="AntivirusStatusUnavailable">وضعیت آنتی‌ویروس قابل بررسی نبود.</sys:String>
-    <sys:String x:Key="LearnMore">اطلاعات بیشتر</sys:String>
+    <sys:String x:Key="LearnMore">جزئیات</sys:String>
 
     <sys:String x:Key="UsbNotConnected">هیچ حافظه USB شناسایی نشد</sys:String>
     <sys:String x:Key="UsbConnectHint">برای شروع یک حافظه USB قابل‌حذف متصل کنید.</sys:String>
@@ -59,4 +59,17 @@
     <sys:String x:Key="AdminPermissionCanceled">عملیات لغو شد و هیچ تنظیمی تغییر نکرد.</sys:String>
     <sys:String x:Key="AdminElevationFailed">NoHidden با دسترسی Administrator اجرا نشده است و امکان اعمال محافظت وجود ندارد.</sys:String>
     <sys:String x:Key="AdminElevationRequired">برای اعمال این تنظیمات، دسترسی Administrator لازم است.</sys:String>
+
+    <sys:String x:Key="AntivirusDetailsTitle">جزئیات آنتی‌ویروس</sys:String>
+    <sys:String x:Key="AntivirusDetailsSubtitle">اطلاعاتی که ویندوز درباره محصول امنیتی گزارش می‌کند</sys:String>
+    <sys:String x:Key="AntivirusProductLabel">محصول</sys:String>
+    <sys:String x:Key="AntivirusSourceLabel">منبع اطلاعات</sys:String>
+    <sys:String x:Key="AntivirusSourceValue">Windows Security Center</sys:String>
+    <sys:String x:Key="AntivirusStateCodeLabel">کد وضعیت فنی</sys:String>
+    <sys:String x:Key="AntivirusDetailsExplanation">NoHidden از Windows Security Center برای تشخیص محصول امنیتی ثبت‌شده استفاده می‌کند. شناسایی شدن محصول یعنی ویندوز آن را به‌عنوان آنتی‌ویروس می‌شناسد؛ این مورد به‌تنهایی تضمین نمی‌کند که همه قابلیت‌های حفاظتی، به‌روزرسانی‌ها یا Real-time protection فعال هستند.</sys:String>
+    <sys:String x:Key="AntivirusTechnicalNote">کد وضعیت فقط برای عیب‌یابی نمایش داده می‌شود و امتیاز سلامت یا درصد امنیت نیست.</sys:String>
+    <sys:String x:Key="NoAntivirusProduct">هیچ محصولی شناسایی نشد</sys:String>
+    <sys:String x:Key="NotAvailable">در دسترس نیست</sys:String>
+    <sys:String x:Key="Close">بستن</sys:String>
+    <sys:String x:Key="LearnMoreOnline">مطالعه بیشتر در سایت</sys:String>
 </ResourceDictionary>

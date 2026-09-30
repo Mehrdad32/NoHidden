@@ -31,5 +31,8 @@ jobs:
       - name: Build
         run: dotnet build NoHidden.sln -c Release --no-restore
 
+      - name: Scanner smoke tests
+        run: dotnet run --project tests/NoHidden.ScannerSmokeTests/NoHidden.ScannerSmokeTests.csproj -c Release
+
       - name: Publish self-contained x64
         run: dotnet publish NoHidden/NoHidden.csproj -c Release -r win-x64 --self-contained true --no-restore

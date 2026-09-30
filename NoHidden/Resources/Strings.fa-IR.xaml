@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <sys:String x:Key="AppTitle" xmlns:sys="clr-namespace:System;assembly=mscorlib">NoHidden</sys:String>
+    <sys:String x:Key="AppVersion" xmlns:sys="clr-namespace:System;assembly=mscorlib">نگارش3.0 (۱۴۰۳۱۰)</sys:String>
+    <sys:String x:Key="SystemInfo" xmlns:sys="clr-namespace:System;assembly=mscorlib">اطلاعات سیستم</sys:String>
+    <sys:String x:Key="AutorunStatus" xmlns:sys="clr-namespace:System;assembly=mscorlib">وضعیت اجرای خودکار: {0}</sys:String>
+    <sys:String x:Key="Error" xmlns:sys="clr-namespace:System;assembly=mscorlib">خطا: {0}</sys:String>
+    <sys:String x:Key="AutorunDisabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">اجرای خودکار غیرفعال است</sys:String>
+    <sys:String x:Key="AutorunEnabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">اجرای خودکار فعال است</sys:String>
+    <sys:String x:Key="AutoPlayEnabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">پخش خودکار فعال است</sys:String>
+    <sys:String x:Key="AutoPlayStatusUnknown" xmlns:sys="clr-namespace:System;assembly=mscorlib">وضعیت پخش خودکار ناشناخته است</sys:String>
+    <sys:String x:Key="AutoPlayDisabledGlobally" xmlns:sys="clr-namespace:System;assembly=mscorlib">پخش خودکار به طور کلی غیرفعال است</sys:String>
+    <sys:String x:Key="UnknownAntivirus" xmlns:sys="clr-namespace:System;assembly=mscorlib">وضعیت آنتی‌ویروس نامشخص است</sys:String>
+    <sys:String x:Key="AntivirusStatus" xmlns:sys="clr-namespace:System;assembly=mscorlib">آنتی‌ویروس {0} نصب بوده و {1} است</sys:String>
+    <sys:String x:Key="NotInstalled" xmlns:sys="clr-namespace:System;assembly=mscorlib">هیچ آنتی‌ویروس فعال و نصب شده‌ای پیدا نشد</sys:String>
+    <sys:String x:Key="Disabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">غیرفعال</sys:String>
+    <sys:String x:Key="Enabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">فعال</sys:String>
+    <sys:String x:Key="Messages" xmlns:sys="clr-namespace:System;assembly=mscorlib">پیغام‌ها</sys:String>
+    <sys:String x:Key="OperationsGroupHeader" xmlns:sys="clr-namespace:System;assembly=mscorlib">عملیات</sys:String>
+    <sys:String x:Key="ClickToDisableAutoRun" xmlns:sys="clr-namespace:System;assembly=mscorlib">--> مهم: اینجا کلیک کنید تا اول اجرای خودکار را غیرفعال سازید!</sys:String>
+    <sys:String x:Key="ClickToLearnMoreAboutAntiVirus" xmlns:sys="clr-namespace:System;assembly=mscorlib">--> مهم: ابتدا آنتی‌ویروس سیستم را فعال یا در صورت نبود آن را نصب نمایید!</sys:String>
+</ResourceDictionary>

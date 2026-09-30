@@ -14,55 +14,49 @@ public partial class MainViewModel : ObservableObject
     private readonly DriveManager _driveManager = new();
 
     [ObservableProperty]
-    private string appTitle = string.Empty;
-
-    [ObservableProperty]
-    private string appVersion = string.Empty;
-
-    [ObservableProperty]
-    private string systemInfo = string.Empty;
-
-    [ObservableProperty]
     private string autorunStatus = string.Empty;
+
+    [ObservableProperty]
+    private string protectionBadgeText = string.Empty;
+
+    [ObservableProperty]
+    private string protectionStatusColor = "#F59E0B";
 
     [ObservableProperty]
     private string antivirusStatus = string.Empty;
 
     [ObservableProperty]
-    private string messagesTitle = string.Empty;
+    private string antivirusBadgeText = string.Empty;
 
     [ObservableProperty]
-    private string messages = string.Empty;
+    private string antivirusStatusColor = "#64748B";
 
     [ObservableProperty]
-    private string disableAutoRunText = string.Empty;
+    private string usbStatus = string.Empty;
 
     [ObservableProperty]
-    private string learnMoreAboutAntiVirus = string.Empty;
+    private string usbDetails = string.Empty;
 
     [ObservableProperty]
-    private string operationGroupHeader = string.Empty;
+    private string usbStatusColor = "#64748B";
 
     [ObservableProperty]
-    private string selectUsbDriveText = string.Empty;
+    private string emptyStateTitle = string.Empty;
 
     [ObservableProperty]
-    private string problemsHeader = string.Empty;
+    private string emptyStateDescription = string.Empty;
 
     [ObservableProperty]
-    private string scanNotStartedText = string.Empty;
-
-    [ObservableProperty]
-    private string languageHeader = string.Empty;
-
-    [ObservableProperty]
-    private string refreshDrivesToolTip = string.Empty;
+    private string statusMessage = string.Empty;
 
     [ObservableProperty]
     private ObservableCollection<UsbDriveInfo> removableDrives = [];
 
     [ObservableProperty]
     private UsbDriveInfo? selectedDrive;
+
+    [ObservableProperty]
+    private bool hasSelectedDrive;
 
     [ObservableProperty]
     private Visibility disableAutoRunButtonVisibility = Visibility.Visible;
@@ -74,29 +68,19 @@ public partial class MainViewModel : ObservableObject
     {
         ReloadLocalization();
         LoadDrives();
+        StatusMessage = Resource("ReadyStatus");
     }
 
     public void ReloadLocalization()
     {
-        LoadLocalizedResources();
         CheckAutorunStatus();
         CheckAntivirusStatus();
+        UpdateUsbState();
     }
 
-    private void LoadLocalizedResources()
+    partial void OnSelectedDriveChanged(UsbDriveInfo? value)
     {
-        AppTitle = Resource("AppTitle");
-        AppVersion = Resource("AppVersion");
-        SystemInfo = Resource("SystemInfo");
-        MessagesTitle = Resource("Messages");
-        DisableAutoRunText = Resource("ClickToDisableAutoRun");
-        LearnMoreAboutAntiVirus = Resource("ClickToLearnMoreAboutAntiVirus");
-        OperationGroupHeader = Resource("OperationsGroupHeader");
-        SelectUsbDriveText = Resource("SelectUsbDrive");
-        ProblemsHeader = Resource("Problems");
-        ScanNotStartedText = Resource("ScanNotStarted");
-        LanguageHeader = Resource("Language");
-        RefreshDrivesToolTip = Resource("RefreshDrives");
+        UpdateUsbState();
     }
 
     private void LoadDrives()
@@ -115,9 +99,28 @@ public partial class MainViewModel : ObservableObject
                     StringComparison.OrdinalIgnoreCase))
               ?? drives.FirstOrDefault();
 
-        Messages = drives.Count == 0
-            ? Resource("NoRemovableDevices")
-            : string.Empty;
+        UpdateUsbState();
+    }
+
+    private void UpdateUsbState()
+    {
+        HasSelectedDrive = SelectedDrive is not null;
+
+        if (SelectedDrive is null)
+        {
+            UsbStatus = Resource("UsbNotConnected");
+            UsbDetails = Resource("UsbConnectHint");
+            UsbStatusColor = "#64748B";
+            EmptyStateTitle = Resource("EmptyStateNoUsbTitle");
+            EmptyStateDescription = Resource("EmptyStateNoUsbDescription");
+            return;
+        }
+
+        UsbStatus = SelectedDrive.DisplayName;
+        UsbDetails = $"{SelectedDrive.DriveFormat}  •  {SelectedDrive.CapacityText}";
+        UsbStatusColor = "#3B82F6";
+        EmptyStateTitle = Resource("EmptyStateReadyTitle");
+        EmptyStateDescription = Resource("EmptyStateReadyDescription");
     }
 
     private void CheckAutorunStatus()
@@ -126,23 +129,26 @@ public partial class MainViewModel : ObservableObject
         {
             var (isAutorunDisabled, isAutoPlayDisabled) = _autoPlayManager.CheckStatus();
 
-            string autorun = isAutorunDisabled
-                ? Resource("AutorunDisabled")
-                : Resource("AutorunEnabled");
+            if (isAutorunDisabled && isAutoPlayDisabled)
+            {
+                ProtectionBadgeText = Resource("Protected");
+                ProtectionStatusColor = "#22C55E";
+                AutorunStatus = Resource("AutorunProtectionActive");
+                DisableAutoRunButtonVisibility = Visibility.Collapsed;
+                return;
+            }
 
-            string autoplay = isAutoPlayDisabled
-                ? Resource("AutoPlayDisabledGlobally")
-                : Resource("AutoPlayEnabled");
-
-            AutorunStatus = $"{autorun} + {autoplay}";
-            DisableAutoRunButtonVisibility =
-                isAutorunDisabled && isAutoPlayDisabled
-                    ? Visibility.Collapsed
-                    : Visibility.Visible;
+            ProtectionBadgeText = Resource("Attention");
+            ProtectionStatusColor = "#F59E0B";
+            AutorunStatus = Resource("AutorunProtectionRecommended");
+            DisableAutoRunButtonVisibility = Visibility.Visible;
         }
         catch (Exception ex)
         {
-            AutorunStatus = FormatError(ex);
+            ProtectionBadgeText = Resource("Unknown");
+            ProtectionStatusColor = "#64748B";
+            AutorunStatus = Resource("ProtectionStatusUnavailable");
+            StatusMessage = FormatError(ex);
         }
     }
 
@@ -154,22 +160,28 @@ public partial class MainViewModel : ObservableObject
 
             if (antivirusInfo is null)
             {
+                AntivirusBadgeText = Resource("NotDetected");
+                AntivirusStatusColor = "#F59E0B";
                 AntivirusStatus = Resource("NotInstalled");
                 LearnMoreButtonVisibility = Visibility.Visible;
                 return;
             }
 
+            AntivirusBadgeText = Resource("Detected");
+            AntivirusStatusColor = "#22C55E";
             AntivirusStatus = string.Format(
-                Resource("AntivirusStatus"),
-                antivirusInfo.DisplayName ?? Resource("UnknownAntivirus"),
-                antivirusInfo.ProductState.ToString("X6"));
+                Resource("AntivirusDetected"),
+                antivirusInfo.DisplayName ?? Resource("UnknownAntivirus"));
 
-            LearnMoreButtonVisibility = Visibility.Collapsed;
+            LearnMoreButtonVisibility = Visibility.Visible;
         }
         catch (Exception ex)
         {
-            AntivirusStatus = FormatError(ex);
+            AntivirusBadgeText = Resource("Unknown");
+            AntivirusStatusColor = "#64748B";
+            AntivirusStatus = Resource("AntivirusStatusUnavailable");
             LearnMoreButtonVisibility = Visibility.Visible;
+            StatusMessage = FormatError(ex);
         }
     }
 
@@ -180,11 +192,11 @@ public partial class MainViewModel : ObservableObject
         {
             _autoPlayManager.DisableAutorunAndAutoPlay();
             CheckAutorunStatus();
-            Messages = Resource("AutorunProtectionEnabled");
+            StatusMessage = Resource("AutorunProtectionEnabled");
         }
         catch (Exception ex)
         {
-            Messages = FormatError(ex);
+            StatusMessage = FormatError(ex);
         }
     }
 
@@ -204,7 +216,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Messages = FormatError(ex);
+            StatusMessage = FormatError(ex);
         }
     }
 
@@ -212,6 +224,16 @@ public partial class MainViewModel : ObservableObject
     private void RefreshDrives()
     {
         LoadDrives();
+
+        StatusMessage = HasSelectedDrive
+            ? Resource("UsbRefreshed")
+            : Resource("NoRemovableDevices");
+    }
+
+    [RelayCommand]
+    private void StartScan()
+    {
+        StatusMessage = Resource("ScannerComingNext");
     }
 
     private static string Resource(string key)

@@ -161,7 +161,8 @@ public sealed class UsbScanner
                     attributes.HasFlag(FileAttributes.Hidden) ||
                     attributes.HasFlag(FileAttributes.System);
 
-                if (isHiddenOrSystem)
+                if (isHiddenOrSystem &&
+                    IsRecoverableHiddenItem(name, isDirectory))
                 {
                     findings.Add(
                         CreateFinding(
@@ -238,17 +239,6 @@ public sealed class UsbScanner
             return;
         }
 
-        if (HasDoubleExtension(path))
-        {
-            findings.Add(
-                CreateFinding(
-                    FindingType.DoubleExtension,
-                    FindingSeverity.High,
-                    root,
-                    path,
-                    "ReasonDoubleExtension"));
-        }
-
         if (MatchesNearbyFolder(path))
         {
             findings.Add(
@@ -258,6 +248,21 @@ public sealed class UsbScanner
                     root,
                     path,
                     "ReasonFolderMasquerading"));
+
+            return;
+        }
+
+        if (HasDoubleExtension(path))
+        {
+            findings.Add(
+                CreateFinding(
+                    FindingType.DoubleExtension,
+                    FindingSeverity.High,
+                    root,
+                    path,
+                    "ReasonDoubleExtension"));
+
+            return;
         }
 
         FindingSeverity severity =
@@ -450,6 +455,40 @@ public sealed class UsbScanner
         return Path.EndsInDirectorySeparator(fullPath)
             ? fullPath
             : fullPath + Path.DirectorySeparatorChar;
+    }
+
+    private static bool IsRecoverableHiddenItem(
+        string name,
+        bool isDirectory)
+    {
+        if (isDirectory)
+        {
+            return true;
+        }
+
+        if (string.Equals(
+                name,
+                "autorun.inf",
+                StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(
+                name,
+                "desktop.ini",
+                StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(
+                name,
+                "thumbs.db",
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        string extension = Path.GetExtension(name);
+
+        return !IsDangerousExtension(extension) &&
+               !string.Equals(
+                   extension,
+                   ".lnk",
+                   StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsIgnoredDirectory(string name)

@@ -195,11 +195,60 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void DisableAutorun()
     {
+        if (ElevationManager.IsAdministrator())
+        {
+            ApplyAutorunProtection();
+            return;
+        }
+
+        var dialog = new AdminPermissionDialog
+        {
+            Owner = Application.Current.MainWindow
+        };
+
+        if (dialog.ShowDialog() != true)
+        {
+            SetStatusMessage("AdminPermissionCanceled");
+            return;
+        }
+
+        try
+        {
+            ElevationManager.RestartAsAdministratorForAutorunProtection();
+            Application.Current.Shutdown();
+        }
+        catch (Exception ex) when (ElevationManager.IsElevationCanceled(ex))
+        {
+            SetStatusMessage("AdminPermissionCanceled");
+        }
+        catch (Exception ex)
+        {
+            SetErrorStatus(ex);
+        }
+    }
+
+    public void ApplyAutorunProtectionFromElevatedStartup()
+    {
+        if (!ElevationManager.IsAdministrator())
+        {
+            SetStatusMessage("AdminElevationFailed");
+            return;
+        }
+
+        ApplyAutorunProtection();
+    }
+
+    private void ApplyAutorunProtection()
+    {
         try
         {
             _autoPlayManager.DisableAutorunAndAutoPlay();
             CheckAutorunStatus();
             SetStatusMessage("AutorunProtectionEnabled");
+        }
+        catch (UnauthorizedAccessException)
+        {
+            SetStatusMessage("AdminElevationRequired");
         }
         catch (Exception ex)
         {

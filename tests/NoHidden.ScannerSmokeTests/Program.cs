@@ -23,6 +23,20 @@ try
     string scriptFile = Path.Combine(root, "run.bat");
     File.WriteAllText(scriptFile, "@echo off");
 
+    string documentsFolder = Path.Combine(root, "Documents");
+    Directory.CreateDirectory(documentsFolder);
+
+    string impersonatingExecutable = Path.Combine(root, "Documents.exe");
+    File.WriteAllText(impersonatingExecutable, "not-a-real-executable");
+
+    string desktopIni = Path.Combine(root, "desktop.ini");
+    File.WriteAllText(desktopIni, "[.ShellClassInfo]");
+    File.SetAttributes(
+        desktopIni,
+        File.GetAttributes(desktopIni) |
+        FileAttributes.Hidden |
+        FileAttributes.System);
+
     string payloadFile = Path.Combine(root, "evil.vbs");
     File.WriteAllText(payloadFile, "WScript.Echo \"test\"");
     File.SetAttributes(
@@ -62,6 +76,21 @@ try
                 finding.Type == FindingType.SuspiciousScript &&
                 finding.Path == scriptFile),
         "Root BAT script was not detected.");
+
+    Assert(
+        report.Findings.Any(
+            finding =>
+                finding.Type == FindingType.FolderMasquerading &&
+                finding.Path == impersonatingExecutable &&
+                finding.Severity == FindingSeverity.High),
+        "Folder-impersonating executable was not detected as high risk.");
+
+    Assert(
+        !report.Findings.Any(
+            finding =>
+                finding.Type == FindingType.HiddenItem &&
+                finding.Path == desktopIni),
+        "desktop.ini should not be offered as recoverable user content.");
 
     Assert(
         report.Findings.Any(

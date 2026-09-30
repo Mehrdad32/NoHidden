@@ -1,46 +1,85 @@
-﻿using System;
+using NoHidden.Managers;
 using System.Threading;
 using System.Windows;
-using NoHidden.Managers;
 
-namespace NoHidden
+namespace NoHidden;
+
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    private const string MutexName = "NoHiddenSingleInstanceMutex";
+
+    private Mutex? _appMutex;
+    private bool _ownsMutex;
+
+    protected override void OnStartup(StartupEventArgs e)
     {
-        private static Mutex? appMutex;
+        int? parentProcessId =
+            ElevationManager.GetParentProcessId(e.Args);
 
-        protected override void OnStartup(StartupEventArgs e)
+        ElevationManager.WaitForParentProcessExit(parentProcessId);
+
+        base.OnStartup(e);
+
+        LocalizationManager.LoadLanguage();
+
+        _appMutex = new Mutex(
+            initiallyOwned: true,
+            name: MutexName,
+            createdNew: out bool isNewInstance);
+
+        _ownsMutex = isNewInstance;
+
+        if (!isNewInstance)
         {
-            const string mutexName = "NoHiddenSingleInstanceMutex";
+            MessageBox.Show(
+                Resource("ApplicationAlreadyRunning"),
+                Resource("AppTitle"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
 
-            // Try to create a new mutex
-            appMutex = new Mutex(true, mutexName, out bool isNewInstance);
+            Shutdown();
+            return;
+        }
 
-            if (!isNewInstance)
+        var mainWindow = new MainWindow();
+        MainWindow = mainWindow;
+        mainWindow.Show();
+
+        bool applyAutorunProtection =
+            e.Args.Any(
+                argument => string.Equals(
+                    argument,
+                    ElevationManager.ApplyAutorunProtectionArgument,
+                    StringComparison.OrdinalIgnoreCase));
+
+        if (applyAutorunProtection &&
+            mainWindow.DataContext is MainViewModel viewModel)
+        {
+            viewModel.ApplyAutorunProtectionFromElevatedStartup();
+        }
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        if (_ownsMutex)
+        {
+            try
             {
-                // If the mutex already exists, another instance is running
-                MessageBox.Show("The application is already running.", "NoHidden", MessageBoxButton.OK, MessageBoxImage.Warning);
-                Environment.Exit(0); // Exit the current instance
+                _appMutex?.ReleaseMutex();
             }
-
-            base.OnStartup(e);
-
-            // Load the previously saved language
-            LocalizationManager.LoadLanguage();
-
-            // Create and show the MainWindow
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            catch (ApplicationException)
+            {
+                // The mutex ownership was already released.
+            }
         }
 
-        protected override void OnExit(ExitEventArgs e)
-        {
-            // Release the mutex when the application exits
-            appMutex?.ReleaseMutex();
-            base.OnExit(e);
-        }
+        _appMutex?.Dispose();
+
+        base.OnExit(e);
+    }
+
+    private static string Resource(string key)
+    {
+        return Current.TryFindResource(key) as string ?? key;
     }
 }

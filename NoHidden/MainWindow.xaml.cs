@@ -1,33 +1,50 @@
-﻿using System.Windows;
-using System.Windows.Controls;
 using NoHidden.Managers;
+using System.Windows;
+using System.Windows.Controls;
 
-namespace NoHidden
+namespace NoHidden;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    private bool _isInitializingLanguageSelection;
+
+    public MainWindow()
     {
-        public MainWindow()
+        _isInitializingLanguageSelection = true;
+
+        InitializeComponent();
+
+        LanguageComboBox.SelectedValue = LocalizationManager.CurrentLanguage;
+
+        _isInitializingLanguageSelection = false;
+    }
+
+    private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isInitializingLanguageSelection ||
+            sender is not ComboBox comboBox ||
+            comboBox.SelectedItem is not ComboBoxItem selectedItem ||
+            selectedItem.Tag is not string cultureName)
         {
-            InitializeComponent();
+            return;
         }
 
-        private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
+        LocalizationManager.ChangeLanguage(cultureName);
 
-            if (comboBox.SelectedItem is ComboBoxItem selectedItem)
-            {
-                string cultureName = selectedItem.Tag.ToString();
-                LocalizationManager.ChangeLanguage(cultureName);
-            }
+        if (DataContext is MainViewModel viewModel)
+        {
+            viewModel.ReloadLocalization();
         }
+    }
 
-        private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void Border_MouseLeftButtonDown(
+        object sender,
+        System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is Border border &&
+            border.TemplatedParent is ComboBox comboBox)
         {
-            if (sender is Border border && border.TemplatedParent is ComboBox comboBox)
-            {
-                comboBox.IsDropDownOpen = !comboBox.IsDropDownOpen;
-            }
+            comboBox.IsDropDownOpen = !comboBox.IsDropDownOpen;
         }
     }
 }

@@ -1,200 +1,314 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Win32;
 using NoHidden.Managers;
+using NoHidden.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Management;
 using System.Windows;
 
-namespace NoHidden
+namespace NoHidden;
+
+public partial class MainViewModel : ObservableObject
 {
-    public partial class MainViewModel : ObservableObject
+    private readonly AutoPlayManager _autoPlayManager = new();
+    private readonly DriveManager _driveManager = new();
+    private AntivirusInfo? _currentAntivirusInfo;
+
+    [ObservableProperty]
+    private string autorunStatus = string.Empty;
+
+    [ObservableProperty]
+    private string protectionBadgeText = string.Empty;
+
+    [ObservableProperty]
+    private string protectionStatusColor = "#F59E0B";
+
+    [ObservableProperty]
+    private string antivirusStatus = string.Empty;
+
+    [ObservableProperty]
+    private string antivirusBadgeText = string.Empty;
+
+    [ObservableProperty]
+    private string antivirusStatusColor = "#64748B";
+
+    [ObservableProperty]
+    private string usbStatus = string.Empty;
+
+    [ObservableProperty]
+    private string usbDetails = string.Empty;
+
+    [ObservableProperty]
+    private string usbStatusColor = "#64748B";
+
+    [ObservableProperty]
+    private string emptyStateTitle = string.Empty;
+
+    [ObservableProperty]
+    private string emptyStateDescription = string.Empty;
+
+    [ObservableProperty]
+    private string statusMessage = string.Empty;
+
+    [ObservableProperty]
+    private FlowDirection contentFlowDirection = FlowDirection.LeftToRight;
+
+    private string _statusMessageResourceKey = "ReadyStatus";
+    private string? _statusMessageDetail;
+
+    [ObservableProperty]
+    private ObservableCollection<UsbDriveInfo> removableDrives = [];
+
+    [ObservableProperty]
+    private UsbDriveInfo? selectedDrive;
+
+    [ObservableProperty]
+    private bool hasSelectedDrive;
+
+    [ObservableProperty]
+    private Visibility disableAutoRunButtonVisibility = Visibility.Visible;
+
+    [ObservableProperty]
+    private Visibility learnMoreButtonVisibility = Visibility.Visible;
+
+    public MainViewModel()
     {
-        private readonly AutoPlayManager _autoPlayManager = new();
-        private readonly DriveManager _driveManager = new();
+        ReloadLocalization();
+        LoadDrives();
+    }
 
-        [ObservableProperty]
-        private string? appTitle;
+    public void ReloadLocalization()
+    {
+        ContentFlowDirection = LocalizationManager.GetFlowDirection();
+        CheckAutorunStatus();
+        CheckAntivirusStatus();
+        UpdateUsbState();
+        RefreshStatusMessage();
+    }
 
-        [ObservableProperty]
-        private string? appVersion;
+    partial void OnSelectedDriveChanged(UsbDriveInfo? value)
+    {
+        UpdateUsbState();
+    }
 
-        [ObservableProperty]
-        private string? systemInfo;
+    private void LoadDrives()
+    {
+        string? previouslySelectedRoot = SelectedDrive?.RootPath;
+        ObservableCollection<UsbDriveInfo> drives = _driveManager.GetRemovableDrives();
 
-        [ObservableProperty]
-        private string? autorunStatus;
+        RemovableDrives = drives;
 
-        [ObservableProperty]
-        private string? antivirusStatus;
+        SelectedDrive = previouslySelectedRoot is null
+            ? drives.FirstOrDefault()
+            : drives.FirstOrDefault(
+                drive => string.Equals(
+                    drive.RootPath,
+                    previouslySelectedRoot,
+                    StringComparison.OrdinalIgnoreCase))
+              ?? drives.FirstOrDefault();
 
-        [ObservableProperty]
-        private string? messagesTitle;
+        UpdateUsbState();
+    }
 
-        [ObservableProperty]
-        private string? messages;
+    private void UpdateUsbState()
+    {
+        HasSelectedDrive = SelectedDrive is not null;
 
-        [ObservableProperty]
-        private string? disableAutoRunText;
-
-        [ObservableProperty]
-        private string? learnMoreAboutAntiVirus;
-
-        [ObservableProperty]
-        private string? operationGroupHeader;
-
-        [ObservableProperty]
-        private ObservableCollection<string>? removableDrives;
-
-        [ObservableProperty]
-        private string? selectedDrive;
-
-        [ObservableProperty]
-        private ObservableCollection<Problem> detectedProblems = new();
-
-        [ObservableProperty]
-        private Visibility disableAutoRunButtonVisibility = Visibility.Visible;
-
-        [ObservableProperty]
-        private Visibility learnMoreButtonVisibility = Visibility.Visible;
-
-        public MainViewModel()
+        if (SelectedDrive is null)
         {
-            LoadLocalizedResources();
-            CheckAutorunStatus();
-            CheckAntivirusStatus();
-            LoadDrives();
-
-            // test
-            DetectedProblems.Add(new Problem { Description = "Detect virus file." });
-            DetectedProblems.Add(new Problem { Description = "Detect hidden folder without name." });
-            DetectedProblems.Add(new Problem { Description = "Detect autorun.inf file in the root of the USB disk." });
+            UsbStatus = Resource("UsbNotConnected");
+            UsbDetails = Resource("UsbConnectHint");
+            UsbStatusColor = "#64748B";
+            EmptyStateTitle = Resource("EmptyStateNoUsbTitle");
+            EmptyStateDescription = Resource("EmptyStateNoUsbDescription");
+            return;
         }
 
-        private void LoadLocalizedResources()
+        UsbStatus = SelectedDrive.DisplayName;
+        UsbDetails = $"{SelectedDrive.DriveFormat}  •  {SelectedDrive.CapacityText}";
+        UsbStatusColor = "#3B82F6";
+        EmptyStateTitle = Resource("EmptyStateReadyTitle");
+        EmptyStateDescription = Resource("EmptyStateReadyDescription");
+    }
+
+    private void CheckAutorunStatus()
+    {
+        try
         {
-            AppTitle = (string)Application.Current.FindResource("AppTitle");
-            AppVersion = (string)Application.Current.FindResource("AppVersion");
-            SystemInfo = (string)Application.Current.FindResource("SystemInfo");
-            MessagesTitle = (string)Application.Current.FindResource("Messages");
-            DisableAutoRunText = (string)Application.Current.FindResource("ClickToDisableAutoRun");
-            LearnMoreAboutAntiVirus = (string)Application.Current.FindResource("ClickToLearnMoreAboutAntiVirus");
-            OperationGroupHeader = (string)Application.Current.FindResource("OperationsGroupHeader");
-        }
+            var (isAutorunDisabled, isAutoPlayDisabled) = _autoPlayManager.CheckStatus();
 
-        private void LoadDrives()
-        {
-            RemovableDrives = _driveManager.GetRemovableDrives();
-        }
-
-        private void CheckAutorunStatus()
-        {
-            try
+            if (isAutorunDisabled && isAutoPlayDisabled)
             {
-                var (isAutorunDisabled, isAutoPlayDisabled) = _autoPlayManager.CheckStatus();
-
-                // Update AutorunStatus
-                AutorunStatus = isAutorunDisabled
-                    ? (string)Application.Current.FindResource("AutorunDisabled")
-                    : (string)Application.Current.FindResource("AutorunEnabled");
-
-                // Add AutoPlay Status
-                AutorunStatus += isAutoPlayDisabled
-                    ? " + " + (string)Application.Current.FindResource("AutoPlayDisabledGlobally")
-                    : " + " + (string)Application.Current.FindResource("AutoPlayEnabled");
-
-                // Update Button Visibility
-                DisableAutoRunButtonVisibility = isAutorunDisabled ? Visibility.Collapsed : Visibility.Visible;
-            }
-            catch (Exception ex)
-            {
-                AutorunStatus = string.Format((string)Application.Current.FindResource("Error"), ex.Message);
-            }
-        }
-
-        private void CheckAntivirusStatus()
-        {
-            try
-            {
-                var antivirusInfo = AntivirusDetector.GetAntivirusInfo();
-
-                if (antivirusInfo != null)
-                {
-                    // Interpret the productState bitmask as needed
-                    // Note: The interpretation of productState may vary between antivirus products
-
-                    AntivirusStatus = string.Format((string)Application.Current.FindResource("AntivirusStatus"), antivirusInfo.DisplayName, $"{antivirusInfo.ProductState:X}");
-
-                    LearnMoreButtonVisibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    AntivirusStatus = (string)Application.Current.FindResource("NotInstalled");
-
-                    LearnMoreButtonVisibility = Visibility.Visible;
-                }
-            }
-            catch (Exception ex)
-            {
-                AntivirusStatus = string.Format((string)Application.Current.FindResource("Error"), ex.Message);
-            }
-        }
-
-        [RelayCommand]
-        private void DisableAutorun()
-        {
-            try
-            {
-                _autoPlayManager.DisableAutorunAndAutoPlay();
-                AutorunStatus = (string)Application.Current.FindResource("AutoPlayDisabledGlobally");
-
-                // Hide the button when Autorun is disabled
+                ProtectionBadgeText = Resource("Protected");
+                ProtectionStatusColor = "#22C55E";
+                AutorunStatus = Resource("AutorunProtectionActive");
                 DisableAutoRunButtonVisibility = Visibility.Collapsed;
+                return;
             }
-            catch (Exception ex)
-            {
-                Messages = string.Format((string)Application.Current.FindResource("Error"), ex.Message);
-            }
+
+            ProtectionBadgeText = Resource("Attention");
+            ProtectionStatusColor = "#F59E0B";
+            AutorunStatus = Resource("AutorunProtectionRecommended");
+            DisableAutoRunButtonVisibility = Visibility.Visible;
         }
-
-        [RelayCommand]
-        private void OpenAntivirusInfo()
+        catch (Exception ex)
         {
-            try
-            {
-                string url = "https://www.mehrdad32.ir/7042/why-antivirus-is-important-now/";
-                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                Messages = string.Format((string)Application.Current.FindResource("Error"), ex.Message);
-            }
-        }
-
-        [RelayCommand]
-        private void RefreshDrives()
-        {
-            LoadDrives();
-            if (RemovableDrives!.Count == 0)
-                Messages = "No removable devices has been detected!";
-        }
-
-        [RelayCommand]
-        private void FixProblem(Problem problem)
-        {
-            // Handle fixing the problem
-            // Example: Remove the problem from the list
-            DetectedProblems.Remove(problem);
-
-            // Add your logic here to resolve the specific problem
-            // Example: Delete a file or perform another action
+            ProtectionBadgeText = Resource("Unknown");
+            ProtectionStatusColor = "#64748B";
+            AutorunStatus = Resource("ProtectionStatusUnavailable");
+            SetErrorStatus(ex);
         }
     }
 
-    public class Problem
+    private void CheckAntivirusStatus()
     {
-        public string? Description { get; set; }
-        public string? AdditionalData { get; set; }
+        try
+        {
+            AntivirusInfo? antivirusInfo = AntivirusDetector.GetAntivirusInfo();
+            _currentAntivirusInfo = antivirusInfo;
+
+            if (antivirusInfo is null)
+            {
+                AntivirusBadgeText = Resource("NotDetected");
+                AntivirusStatusColor = "#F59E0B";
+                AntivirusStatus = Resource("NotInstalled");
+                LearnMoreButtonVisibility = Visibility.Visible;
+                return;
+            }
+
+            AntivirusBadgeText = Resource("Detected");
+            AntivirusStatusColor = "#22C55E";
+            AntivirusStatus = string.Format(
+                Resource("AntivirusDetected"),
+                antivirusInfo.DisplayName ?? Resource("UnknownAntivirus"));
+
+            LearnMoreButtonVisibility = Visibility.Visible;
+        }
+        catch (Exception ex)
+        {
+            AntivirusBadgeText = Resource("Unknown");
+            AntivirusStatusColor = "#64748B";
+            AntivirusStatus = Resource("AntivirusStatusUnavailable");
+            LearnMoreButtonVisibility = Visibility.Visible;
+            SetErrorStatus(ex);
+        }
+    }
+
+    [RelayCommand]
+    private void DisableAutorun()
+    {
+        if (ElevationManager.IsAdministrator())
+        {
+            ApplyAutorunProtection();
+            return;
+        }
+
+        var dialog = new AdminPermissionDialog
+        {
+            Owner = Application.Current.MainWindow
+        };
+
+        if (dialog.ShowDialog() != true)
+        {
+            SetStatusMessage("AdminPermissionCanceled");
+            return;
+        }
+
+        try
+        {
+            ElevationManager.RestartAsAdministratorForAutorunProtection();
+            Application.Current.Shutdown();
+        }
+        catch (Exception ex) when (ElevationManager.IsElevationCanceled(ex))
+        {
+            SetStatusMessage("AdminPermissionCanceled");
+        }
+        catch (Exception ex)
+        {
+            SetErrorStatus(ex);
+        }
+    }
+
+    public void ApplyAutorunProtectionFromElevatedStartup()
+    {
+        if (!ElevationManager.IsAdministrator())
+        {
+            SetStatusMessage("AdminElevationFailed");
+            return;
+        }
+
+        ApplyAutorunProtection();
+    }
+
+    private void ApplyAutorunProtection()
+    {
+        try
+        {
+            _autoPlayManager.DisableAutorunAndAutoPlay();
+            CheckAutorunStatus();
+            SetStatusMessage("AutorunProtectionEnabled");
+        }
+        catch (UnauthorizedAccessException)
+        {
+            SetStatusMessage("AdminElevationRequired");
+        }
+        catch (Exception ex)
+        {
+            SetErrorStatus(ex);
+        }
+    }
+
+    [RelayCommand]
+    private void OpenAntivirusInfo()
+    {
+        var dialog = new AntivirusDetailsDialog(_currentAntivirusInfo)
+        {
+            Owner = Application.Current.MainWindow
+        };
+
+        dialog.ShowDialog();
+    }
+
+    [RelayCommand]
+    private void RefreshDrives()
+    {
+        LoadDrives();
+
+        SetStatusMessage(
+            HasSelectedDrive
+                ? "UsbRefreshed"
+                : "NoRemovableDevices");
+    }
+
+    [RelayCommand]
+    private void StartScan()
+    {
+        SetStatusMessage("ScannerComingNext");
+    }
+
+    private void SetStatusMessage(string resourceKey)
+    {
+        _statusMessageResourceKey = resourceKey;
+        _statusMessageDetail = null;
+        RefreshStatusMessage();
+    }
+
+    private void SetErrorStatus(Exception exception)
+    {
+        _statusMessageResourceKey = "Error";
+        _statusMessageDetail = exception.Message;
+        RefreshStatusMessage();
+    }
+
+    private void RefreshStatusMessage()
+    {
+        StatusMessage = _statusMessageResourceKey == "Error" &&
+                        !string.IsNullOrWhiteSpace(_statusMessageDetail)
+            ? string.Format(Resource("Error"), _statusMessageDetail)
+            : Resource(_statusMessageResourceKey);
+    }
+
+    private static string Resource(string key)
+    {
+        return Application.Current.TryFindResource(key) as string ?? key;
     }
 }

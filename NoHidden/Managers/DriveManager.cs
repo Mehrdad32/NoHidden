@@ -1,28 +1,41 @@
-﻿using System.Collections.ObjectModel;
+using NoHidden.Models;
+using System.Collections.ObjectModel;
 using System.IO;
 
-namespace NoHidden.Managers
+namespace NoHidden.Managers;
+
+public sealed class DriveManager
 {
-    public class DriveManager
+    public ObservableCollection<UsbDriveInfo> GetRemovableDrives()
     {
-        /// <summary>
-        /// Gets a list of removable drives.
-        /// </summary>
-        /// <returns>A collection of drive names.</returns>
-        public ObservableCollection<string> GetRemovableDrives()
+        var removableDrives = new ObservableCollection<UsbDriveInfo>();
+
+        foreach (var drive in DriveInfo.GetDrives())
         {
-            var removableDrives = new ObservableCollection<string>();
-
-            foreach (var drive in DriveInfo.GetDrives())
+            try
             {
-                if (drive.DriveType == DriveType.Removable && drive.IsReady)
+                if (drive.DriveType != DriveType.Removable || !drive.IsReady)
                 {
-                    removableDrives.Add($"{drive.Name} ({drive.VolumeLabel})");
+                    continue;
                 }
+
+                removableDrives.Add(new UsbDriveInfo(
+                    drive.RootDirectory.FullName,
+                    drive.VolumeLabel,
+                    drive.DriveFormat,
+                    drive.TotalSize,
+                    drive.AvailableFreeSpace));
             }
-
-            return removableDrives;
+            catch (IOException)
+            {
+                // A removable drive can disappear while Windows is enumerating it.
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Ignore inaccessible removable drives and continue enumerating.
+            }
         }
-    }
 
+        return removableDrives;
+    }
 }

@@ -1,22 +1,75 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <sys:String x:Key="AppTitle" xmlns:sys="clr-namespace:System;assembly=mscorlib">NoHidden</sys:String>
-    <sys:String x:Key="AppVersion" xmlns:sys="clr-namespace:System;assembly=mscorlib">v3.0 (202501)</sys:String>
-    <sys:String x:Key="SystemInfo" xmlns:sys="clr-namespace:System;assembly=mscorlib">System Information</sys:String>
-    <sys:String x:Key="AutorunStatus" xmlns:sys="clr-namespace:System;assembly=mscorlib">Autorun Status: {0}</sys:String>
-    <sys:String x:Key="Error" xmlns:sys="clr-namespace:System;assembly=mscorlib">Error: {0}</sys:String>
-    <sys:String x:Key="AutorunDisabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">Autorun is Disabled</sys:String>
-    <sys:String x:Key="AutorunEnabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">Autorun is Enabled</sys:String>
-    <sys:String x:Key="AutoPlayEnabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">AutoPlay is Enabled</sys:String>
-    <sys:String x:Key="AutoPlayStatusUnknown" xmlns:sys="clr-namespace:System;assembly=mscorlib">AutoPlay status unknown</sys:String>
-    <sys:String x:Key="AutoPlayDisabledGlobally" xmlns:sys="clr-namespace:System;assembly=mscorlib">AutoPlay Disabled Globally</sys:String>
-    <sys:String x:Key="UnknownAntivirus" xmlns:sys="clr-namespace:System;assembly=mscorlib">Unknown Antivirus</sys:String>
-    <sys:String x:Key="AntivirusStatus" xmlns:sys="clr-namespace:System;assembly=mscorlib">Antivirus {0} is installed and {1}</sys:String>
-    <sys:String x:Key="NotInstalled" xmlns:sys="clr-namespace:System;assembly=mscorlib">No installed antivirus detected</sys:String>
-    <sys:String x:Key="Disabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">Disabled</sys:String>
-    <sys:String x:Key="Enabled" xmlns:sys="clr-namespace:System;assembly=mscorlib">Enabled</sys:String>
-    <sys:String x:Key="Messages" xmlns:sys="clr-namespace:System;assembly=mscorlib">Messages</sys:String>
-    <sys:String x:Key="OperationsGroupHeader" xmlns:sys="clr-namespace:System;assembly=mscorlib">Operations</sys:String>
-    <sys:String x:Key="ClickToDisableAutoRun" xmlns:sys="clr-namespace:System;assembly=mscorlib">--> IMPORTANT: Click Here To Disable AutoRun First!</sys:String>
-    <sys:String x:Key="ClickToLearnMoreAboutAntiVirus" xmlns:sys="clr-namespace:System;assembly=mscorlib">--> IMPORTANT: First active or install one antivirus app!</sys:String>
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">NoHidden</sys:String>
+    <sys:String x:Key="AppSubtitle">USB malware recovery &amp; protection</sys:String>
+    <sys:String x:Key="AppVersion">v3.0.0 Development</sys:String>
+
+    <sys:String x:Key="WindowsProtection">Windows protection</sys:String>
+    <sys:String x:Key="AntivirusProtection">Antivirus</sys:String>
+    <sys:String x:Key="UsbDevice">USB device</sys:String>
+    <sys:String x:Key="UsbScanner">USB scanner</sys:String>
+    <sys:String x:Key="ScanResults">Results</sys:String>
+
+    <sys:String x:Key="Protected">Protected</sys:String>
+    <sys:String x:Key="Attention">Needs attention</sys:String>
+    <sys:String x:Key="Detected">Detected</sys:String>
+    <sys:String x:Key="NotDetected">Not detected</sys:String>
+    <sys:String x:Key="Unknown">Unknown</sys:String>
+
+    <sys:String x:Key="AutorunProtectionActive">AutoRun and AutoPlay are disabled for this Windows user.</sys:String>
+    <sys:String x:Key="AutorunProtectionRecommended">AutoRun or AutoPlay is enabled. Protection is recommended before opening unknown USB drives.</sys:String>
+    <sys:String x:Key="ProtectionStatusUnavailable">Windows protection status could not be checked.</sys:String>
+    <sys:String x:Key="AutorunProtectionEnabled">Windows USB protection was enabled successfully.</sys:String>
+    <sys:String x:Key="ProtectWindows">Protect Windows</sys:String>
+
+    <sys:String x:Key="UnknownAntivirus">Unknown antivirus</sys:String>
+    <sys:String x:Key="AntivirusDetected">Windows reports {0} as an installed antivirus product.</sys:String>
+    <sys:String x:Key="NotInstalled">Windows Security Center did not report an installed antivirus product.</sys:String>
+    <sys:String x:Key="AntivirusStatusUnavailable">Antivirus status could not be checked.</sys:String>
+    <sys:String x:Key="LearnMore">Details</sys:String>
+
+    <sys:String x:Key="UsbNotConnected">No USB drive detected</sys:String>
+    <sys:String x:Key="UsbConnectHint">Connect a removable USB drive to begin.</sys:String>
+    <sys:String x:Key="SelectUsbDrive">Choose a USB drive</sys:String>
+    <sys:String x:Key="RefreshDrives">Refresh drives</sys:String>
+    <sys:String x:Key="UsbRefreshed">USB drive list refreshed.</sys:String>
+    <sys:String x:Key="NoRemovableDevices">No removable USB drive is currently available.</sys:String>
+
+    <sys:String x:Key="EmptyStateNoUsbTitle">Connect a USB drive</sys:String>
+    <sys:String x:Key="EmptyStateNoUsbDescription">NoHidden will look for hidden files, suspicious shortcuts, autorun entries and potentially dangerous scripts.</sys:String>
+    <sys:String x:Key="EmptyStateReadyTitle">Ready to scan</sys:String>
+    <sys:String x:Key="EmptyStateReadyDescription">The selected drive is ready. Scanning will not modify files unless you explicitly choose a repair action.</sys:String>
+    <sys:String x:Key="ScanUsb">Scan USB</sys:String>
+    <sys:String x:Key="ScannerComingNext">The new scanner engine is the next development phase.</sys:String>
+
+    <sys:String x:Key="ReadyStatus">NoHidden is ready. No files will be changed without your confirmation.</sys:String>
+    <sys:String x:Key="Language">Language</sys:String>
+    <sys:String x:Key="Status">Status</sys:String>
+    <sys:String x:Key="Error">Error: {0}</sys:String>
+
+    <sys:String x:Key="ApplicationAlreadyRunning">NoHidden is already running.</sys:String>
+
+    <sys:String x:Key="AdminPermissionTitle">Administrator permission required</sys:String>
+    <sys:String x:Key="AdminPermissionSubtitle">Required to change Windows protection settings</sys:String>
+    <sys:String x:Key="AdminPermissionDescription">To disable AutoRun and AutoPlay system-wide, NoHidden needs to restart once with Administrator permission. After you confirm, this window will close, the standard Windows UAC prompt will appear, and NoHidden will continue the protection step automatically.</sys:String>
+    <sys:String x:Key="AdminPermissionNote">NoHidden only changes Windows AutoRun and AutoPlay policy in this step. It does not delete or modify files on any USB drive.</sys:String>
+    <sys:String x:Key="RestartAsAdministrator">Restart as Administrator</sys:String>
+    <sys:String x:Key="Cancel">Cancel</sys:String>
+    <sys:String x:Key="AdminPermissionCanceled">The operation was canceled. No settings were changed.</sys:String>
+    <sys:String x:Key="AdminElevationFailed">NoHidden is not running with Administrator permission, so protection could not be applied.</sys:String>
+    <sys:String x:Key="AdminElevationRequired">Administrator permission is required to apply these settings.</sys:String>
+
+    <sys:String x:Key="AntivirusDetailsTitle">Antivirus details</sys:String>
+    <sys:String x:Key="AntivirusDetailsSubtitle">Information reported by Windows about the security product</sys:String>
+    <sys:String x:Key="AntivirusProductLabel">Product</sys:String>
+    <sys:String x:Key="AntivirusSourceLabel">Information source</sys:String>
+    <sys:String x:Key="AntivirusSourceValue">Windows Security Center</sys:String>
+    <sys:String x:Key="AntivirusStateCodeLabel">Technical state code</sys:String>
+    <sys:String x:Key="AntivirusDetailsExplanation">NoHidden uses Windows Security Center to identify the registered security product. Detection means Windows recognizes the product as antivirus software; by itself, this does not guarantee that every protection feature, definition update, or real-time protection setting is enabled.</sys:String>
+    <sys:String x:Key="AntivirusTechnicalNote">The state code is shown only for diagnostics. It is not a security score or health percentage.</sys:String>
+    <sys:String x:Key="NoAntivirusProduct">No antivirus product detected</sys:String>
+    <sys:String x:Key="NotAvailable">Not available</sys:String>
+    <sys:String x:Key="Close">Close</sys:String>
+    <sys:String x:Key="LearnMoreOnline">Read more online</sys:String>
 </ResourceDictionary>

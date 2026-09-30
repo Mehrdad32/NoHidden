@@ -13,7 +13,8 @@
         FontFamily="pack://application:,,,/#Vazirmatn"
         ResizeMode="CanResize"
         UseLayoutRounding="True"
-        SnapsToDevicePixels="True">
+        SnapsToDevicePixels="True"
+        FlowDirection="LeftToRight">
 
     <Window.DataContext>
         <local:MainViewModel />
@@ -191,6 +192,7 @@
                         <Grid>
                             <Border x:Name="ComboBorder"
                                     Background="{TemplateBinding Background}"
+                                    MouseLeftButtonDown="Border_MouseLeftButtonDown"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     CornerRadius="8">
@@ -275,6 +277,7 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0"
+                FlowDirection="LeftToRight"
                 Background="#0F1728"
                 BorderBrush="#1C2940"
                 BorderThickness="0,0,0,1"
@@ -312,11 +315,13 @@
                                     Margin="10,0,0,0"
                                     VerticalAlignment="Center">
                                 <TextBlock Text="{DynamicResource AppVersion}"
+                                           FlowDirection="{Binding ContentFlowDirection}"
                                            FontSize="11"
                                            Foreground="#9FB0CA" />
                             </Border>
                         </StackPanel>
                         <TextBlock Text="{DynamicResource AppSubtitle}"
+                                   FlowDirection="{Binding ContentFlowDirection}"
                                    Foreground="{StaticResource TextSecondaryBrush}"
                                    FontSize="13"
                                    Margin="0,4,0,0" />
@@ -342,6 +347,7 @@
         </Border>
 
         <Grid Grid.Row="1"
+              FlowDirection="{Binding ContentFlowDirection}"
               Margin="28,20,28,24">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

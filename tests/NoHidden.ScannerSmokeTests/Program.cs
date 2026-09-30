@@ -25,6 +25,11 @@ try
 
     string payloadFile = Path.Combine(root, "evil.vbs");
     File.WriteAllText(payloadFile, "WScript.Echo \"test\"");
+    File.SetAttributes(
+        payloadFile,
+        File.GetAttributes(payloadFile) |
+        FileAttributes.Hidden |
+        FileAttributes.System);
 
     string autorunFile = Path.Combine(root, "autorun.inf");
     File.WriteAllText(
@@ -65,6 +70,22 @@ try
                 finding.Path == autorunFile &&
                 finding.Severity == FindingSeverity.High),
         "Suspicious autorun.inf was not detected as high risk.");
+
+    Assert(
+        report.Findings.Any(
+            finding =>
+                finding.Type == FindingType.SuspiciousScript &&
+                finding.Path == payloadFile &&
+                finding.Severity == FindingSeverity.High),
+        "Hidden script payload was not detected as high risk.");
+
+    Assert(
+        !report.Findings.Any(
+            finding =>
+                finding.Type == FindingType.HiddenItem &&
+                finding.Path == payloadFile &&
+                finding.CanRestoreVisibility),
+        "Suspicious hidden script must never be offered as a visibility-recovery item.");
 
     var repairService = new FileVisibilityRepairService();
     repairService.RestoreVisibility(root, hiddenFile);

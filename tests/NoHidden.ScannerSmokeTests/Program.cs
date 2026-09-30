@@ -24,7 +24,7 @@ try
     File.WriteAllText(scriptFile, "@echo off");
 
     string payloadFile = Path.Combine(root, "evil.vbs");
-    File.WriteAllText(payloadFile, "WScript.Echo "test"");
+    File.WriteAllText(payloadFile, "WScript.Echo \"test\"");
 
     string autorunFile = Path.Combine(root, "autorun.inf");
     File.WriteAllText(

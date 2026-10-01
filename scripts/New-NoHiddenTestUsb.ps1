@@ -35,7 +35,7 @@ $items = [ordered]@{
     Autorun = Join-Path $root 'autorun.inf'
 }
 
-$conflicts = @($markerPath) + @($items.Values) | Where-Object { Test-Path -LiteralPath $_ -Force }
+$conflicts = @($markerPath) + @($items.Values) | Where-Object { Test-Path -LiteralPath $_ }
 
 if ($conflicts.Count -gt 0) {
     $formatted = $conflicts -join [Environment]::NewLine

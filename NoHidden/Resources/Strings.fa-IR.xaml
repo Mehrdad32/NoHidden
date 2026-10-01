@@ -131,4 +131,9 @@
     <sys:String x:Key="DefenderScanNoAction">بررسی Microsoft Defender کامل شد و نیاز به اقدام فوری گزارش نشد.</sys:String>
     <sys:String x:Key="DefenderScanAttention">Microsoft Defender یک تشخیص، نیاز به اقدام یا مشکل در اسکن گزارش کرد. فایل را اجرا نکنید و در صورت تردید آن را غیرفعال کنید.</sys:String>
     <sys:String x:Key="DefenderScanFailed">بررسی فایل با Microsoft Defender کامل نشد.</sys:String>
+
+    <sys:String x:Key="CheckVirusTotal">VirusTotal</sys:String>
+    <sys:String x:Key="CheckVirusTotalToolTip">فقط SHA-256 فایل را محاسبه می‌کند و صفحه گزارش همان Hash را در VirusTotal باز می‌کند؛ فایل آپلود نمی‌شود</sys:String>
+    <sys:String x:Key="HashingFile">در حال محاسبه SHA-256 فایل برای بررسی آنلاین…</sys:String>
+    <sys:String x:Key="VirusTotalOpened">گزارش SHA-256 فایل در VirusTotal باز شد. خود فایل آپلود نشده است.</sys:String>
 </ResourceDictionary>

@@ -41,8 +41,7 @@
             <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}" />
             <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="14" />
-            <Setter Property="Padding" Value="20" />
+            <Setter Property="Padding" Value="16" />
         </Style>
 
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
@@ -140,6 +139,50 @@
             <Setter Property="Width" Value="42" />
             <Setter Property="Height" Value="42" />
             <Setter Property="Padding" Value="8" />
+        </Style>
+        <Style x:Key="InfoIconButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="InfoButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="14">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="InfoButtonBorder"
+                                        Property="Background"
+                                        Value="#22304A" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="InfoButtonBorder"
+                                        Property="Opacity"
+                                        Value="0.85" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FindingActionButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="6,0,0,0" />
         </Style>
 
         <Style TargetType="ComboBoxItem">
@@ -281,7 +324,7 @@
                 Background="#0F1728"
                 BorderBrush="#1C2940"
                 BorderThickness="0,0,0,1"
-                Padding="28,16">
+                Padding="22,10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -290,42 +333,47 @@
 
                 <StackPanel Grid.Column="0"
                             Orientation="Horizontal"
-                            FlowDirection="LeftToRight">
-                    <Border Width="56"
-                            Height="56"
-                            CornerRadius="12"
+                            FlowDirection="LeftToRight"
+                            VerticalAlignment="Center">
+                    <Border Width="44"
+                            Height="44"
+                            CornerRadius="10"
                             Background="#070B13"
-                            Margin="0,0,16,0">
+                            Margin="0,0,12,0">
                         <Image Source="pack://application:,,,/logo.png"
-                               Width="44"
-                               Height="44"
+                               Width="34"
+                               Height="34"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center" />
                     </Border>
 
-                    <StackPanel VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{DynamicResource AppTitle}"
-                                       FontSize="25"
-                                       FontWeight="Bold"
-                                       VerticalAlignment="Center" />
-                            <Border Background="#1B2A43"
-                                    CornerRadius="6"
-                                    Padding="8,3"
-                                    Margin="10,0,0,0"
-                                    VerticalAlignment="Center">
-                                <TextBlock Text="{DynamicResource AppVersion}"
-                                           FlowDirection="{Binding ContentFlowDirection}"
-                                           FontSize="11"
-                                           Foreground="#9FB0CA" />
-                            </Border>
-                        </StackPanel>
-                        <TextBlock Text="{DynamicResource AppSubtitle}"
+                    <TextBlock Text="{DynamicResource AppTitle}"
+                               FontSize="23"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center" />
+
+                    <Border Background="#1B2A43"
+                            CornerRadius="6"
+                            Padding="8,3"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource AppVersion}"
                                    FlowDirection="{Binding ContentFlowDirection}"
-                                   Foreground="{StaticResource TextSecondaryBrush}"
-                                   FontSize="13"
-                                   Margin="0,4,0,0" />
-                    </StackPanel>
+                                   FontSize="11"
+                                   Foreground="#9FB0CA" />
+                    </Border>
+
+                    <TextBlock Text="•"
+                               Foreground="#50627E"
+                               FontSize="14"
+                               Margin="12,0"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Text="{DynamicResource AppSubtitle}"
+                               FlowDirection="{Binding ContentFlowDirection}"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="12"
+                               VerticalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"
@@ -348,10 +396,10 @@
 
         <Grid Grid.Row="1"
               FlowDirection="{Binding ContentFlowDirection}"
-              Margin="28,20,28,24">
+              Margin="24,14,24,18">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
+                <RowDefinition Height="12" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="16" />
                 <RowDefinition Height="Auto" />
@@ -368,7 +416,7 @@
 
                 <Border Grid.Column="0"
                         Style="{StaticResource CardStyle}"
-                        MinHeight="150">
+                        MinHeight="118">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -398,7 +446,7 @@
                         </Grid>
 
                         <Grid Grid.Row="1"
-                              Margin="0,14,0,0">
+                              Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -412,7 +460,7 @@
                                        Text="{Binding AutorunStatus}"
                                        Foreground="{StaticResource TextSecondaryBrush}"
                                        FontSize="13"
-                                       LineHeight="20" />
+                                       LineHeight="18" />
                         </Grid>
 
                         <Button Grid.Row="2"
@@ -421,43 +469,55 @@
                                 Visibility="{Binding DisableAutoRunButtonVisibility}"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 HorizontalAlignment="Left"
-                                Margin="0,14,0,0" />
+                                Margin="0,10,0,0" />
                     </Grid>
                 </Border>
 
                 <Border Grid.Column="2"
                         Style="{StaticResource CardStyle}"
-                        MinHeight="150">
+                        MinHeight="118">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
+
                             <TextBlock Text="{DynamicResource AntivirusProtection}"
                                        FontSize="15"
-                                       FontWeight="SemiBold" />
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+
                             <Border Grid.Column="1"
                                     BorderBrush="{Binding AntivirusStatusColor}"
                                     BorderThickness="1"
                                     CornerRadius="10"
                                     Padding="8,3"
-                                    Margin="8,0,0,0">
+                                    Margin="8,0,6,0"
+                                    VerticalAlignment="Center">
                                 <TextBlock Text="{Binding AntivirusBadgeText}"
                                            Foreground="{Binding AntivirusStatusColor}"
                                            FontSize="11"
                                            FontWeight="SemiBold" />
                             </Border>
+
+                            <Button Grid.Column="2"
+                                    Content="i"
+                                    Command="{Binding OpenAntivirusInfoCommand}"
+                                    Visibility="{Binding LearnMoreButtonVisibility}"
+                                    Style="{StaticResource InfoIconButtonStyle}"
+                                    ToolTip="{DynamicResource AntivirusDetailsToolTip}"
+                                    VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Grid.Row="1"
-                              Margin="0,14,0,0">
+                              Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -470,22 +530,15 @@
                             <TextBlock Grid.Column="1"
                                        Text="{Binding AntivirusStatus}"
                                        Foreground="{StaticResource TextSecondaryBrush}"
-                                       FontSize="13"
-                                       LineHeight="20" />
+                                       FontSize="12"
+                                       LineHeight="18" />
                         </Grid>
-
-                        <Button Grid.Row="2"
-                                Content="{DynamicResource LearnMore}"
-                                Command="{Binding OpenAntivirusInfoCommand}"
-                                Visibility="{Binding LearnMoreButtonVisibility}"
-                                Style="{StaticResource LinkButtonStyle}"
-                                Margin="0,14,0,0" />
                     </Grid>
                 </Border>
 
                 <Border Grid.Column="4"
                         Style="{StaticResource CardStyle}"
-                        MinHeight="150">
+                        MinHeight="118">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -497,7 +550,7 @@
                                    FontWeight="SemiBold" />
 
                         <Grid Grid.Row="1"
-                              Margin="0,14,0,0">
+                              Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -532,7 +585,7 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0"
-                          Margin="0,0,0,16">
+                          Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -558,13 +611,15 @@
                                   MinWidth="250"
                                   MaxWidth="430"
                                   HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Center" />
+                                  VerticalAlignment="Center"
+                                  IsEnabled="{Binding IsDriveInteractionEnabled}" />
 
                         <Button Grid.Column="2"
                                 Command="{Binding RefreshDrivesCommand}"
                                 Style="{StaticResource IconButtonStyle}"
                                 ToolTip="{DynamicResource RefreshDrives}"
-                                Margin="10,0,0,0">
+                                Margin="10,0,0,0"
+                                IsEnabled="{Binding IsDriveInteractionEnabled}">
                             <Image Source="pack://application:,,,/refresh.png"
                                    Width="22"
                                    Height="22"
@@ -574,18 +629,22 @@
                         <Button Grid.Column="3"
                                 Content="{DynamicResource ScanUsb}"
                                 Command="{Binding StartScanCommand}"
-                                IsEnabled="{Binding HasSelectedDrive}"
+                                IsEnabled="{Binding CanStartScan}"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Margin="12,0,0,0"
-                                MinWidth="120" />
+                                MinWidth="120"
+                                Height="42"
+                                Padding="16,0" />
                     </Grid>
 
                     <Border Grid.Row="1"
                             Background="#22304A" />
 
                     <Grid Grid.Row="2"
-                          MinHeight="220">
-                        <StackPanel HorizontalAlignment="Center"
+                          MinHeight="260">
+
+                        <StackPanel Visibility="{Binding ScanEmptyStateVisibility}"
+                                    HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     MaxWidth="650">
                             <Border Width="72"
@@ -617,6 +676,159 @@
                                        LineHeight="22"
                                        Margin="0,8,0,0" />
                         </StackPanel>
+
+                        <StackPanel Visibility="{Binding ScanProgressVisibility}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    Margin="40,0">
+                            <TextBlock Text="{DynamicResource UsbScanner}"
+                                       FontSize="20"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Center" />
+
+                            <ProgressBar IsIndeterminate="True"
+                                         Height="6"
+                                         Margin="0,18,0,14"
+                                         Background="#182236"
+                                         Foreground="#3B82F6" />
+
+                            <TextBlock Text="{Binding ScanProgressText}"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       FontSize="13"
+                                       TextAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxHeight="44" />
+
+                            <Button Content="{DynamicResource CancelScan}"
+                                    Command="{Binding CancelScanCommand}"
+                                    Visibility="{Binding CancelScanVisibility}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,18,0,0"
+                                    MinWidth="100" />
+                        </StackPanel>
+
+                        <Grid Visibility="{Binding ScanResultsVisibility}"
+                              Margin="0,10,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0"
+                                  Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource ScanResults}"
+                                               FontSize="17"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding ScanSummaryText}"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               FontSize="12"
+                                               Margin="0,4,0,0" />
+                                </StackPanel>
+
+                                <Button Grid.Column="1"
+                                        Content="{DynamicResource RestoreAllHidden}"
+                                        Command="{Binding RestoreAllVisibleItemsCommand}"
+                                        Visibility="{Binding RestoreAllVisibility}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        VerticalAlignment="Center" />
+                            </Grid>
+
+                            <ScrollViewer Grid.Row="1"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding ScanFindings}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#0F1728"
+                                                    BorderBrush="#22304A"
+                                                    BorderThickness="1"
+                                                    CornerRadius="9"
+                                                    Padding="10"
+                                                    Margin="0,0,0,7">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border Grid.Column="0"
+                                                            BorderBrush="{Binding SeverityColor}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="8"
+                                                            Padding="8,4"
+                                                            VerticalAlignment="Top"
+                                                            Margin="0,0,12,0">
+                                                        <TextBlock Text="{Binding SeverityText}"
+                                                                   Foreground="{Binding SeverityColor}"
+                                                                   FontSize="11"
+                                                                   FontWeight="SemiBold" />
+                                                    </Border>
+
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding TypeText}"
+                                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                                   FontSize="14"
+                                                                   FontWeight="SemiBold" />
+
+                                                        <TextBlock Text="{Binding Path}"
+                                                                   Foreground="#7FB0FF"
+                                                                   FontSize="12"
+                                                                   Margin="0,3,0,0"
+                                                                   TextTrimming="CharacterEllipsis" />
+
+                                                        <TextBlock Text="{Binding ReasonText}"
+                                                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                                                   FontSize="12"
+                                                                   LineHeight="19"
+                                                                   Margin="0,5,0,0" />
+                                                    </StackPanel>
+
+                                                    <StackPanel Grid.Column="2"
+                                                                Orientation="Horizontal"
+                                                                VerticalAlignment="Center"
+                                                                Margin="12,0,0,0">
+                                                        <Button Content="{Binding RestoreActionText}"
+                                                                Command="{Binding DataContext.RestoreVisibilityCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"
+                                                                Visibility="{Binding RestoreActionVisibility}"
+                                                                Style="{StaticResource FindingActionButtonStyle}" />
+
+                                                        <Button Content="{Binding DefenderActionText}"
+                                                                Command="{Binding DataContext.ScanWithDefenderCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"
+                                                                Visibility="{Binding DefenderActionVisibility}"
+                                                                ToolTip="{DynamicResource ScanWithDefenderToolTip}"
+                                                                Style="{StaticResource FindingActionButtonStyle}" />
+
+                                                        <Button Content="{Binding OnlineCheckActionText}"
+                                                                Command="{Binding DataContext.CheckVirusTotalCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"
+                                                                Visibility="{Binding OnlineCheckActionVisibility}"
+                                                                ToolTip="{DynamicResource CheckVirusTotalToolTip}"
+                                                                Style="{StaticResource FindingActionButtonStyle}" />
+
+                                                        <Button Content="{Binding NeutralizeActionText}"
+                                                                Command="{Binding DataContext.NeutralizeFindingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"
+                                                                Visibility="{Binding NeutralizeActionVisibility}"
+                                                                ToolTip="{DynamicResource NeutralizeFileToolTip}"
+                                                                Style="{StaticResource FindingActionButtonStyle}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Border>

@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppTitle">NoHidden</sys:String>
     <sys:String x:Key="AppSubtitle">USB malware recovery &amp; protection</sys:String>
-    <sys:String x:Key="AppVersion">v3.0.0 Development</sys:String>
+    <sys:String x:Key="AppVersion">v3.0.0</sys:String>
 
     <sys:String x:Key="WindowsProtection">Windows protection</sys:String>
     <sys:String x:Key="AntivirusProtection">Antivirus</sys:String>
@@ -17,7 +17,7 @@
     <sys:String x:Key="NotDetected">Not detected</sys:String>
     <sys:String x:Key="Unknown">Unknown</sys:String>
 
-    <sys:String x:Key="AutorunProtectionActive">AutoRun and AutoPlay are disabled for this Windows user.</sys:String>
+    <sys:String x:Key="AutorunProtectionActive">AutoRun and AutoPlay are disabled system-wide on this Windows installation.</sys:String>
     <sys:String x:Key="AutorunProtectionRecommended">AutoRun or AutoPlay is enabled. Protection is recommended before opening unknown USB drives.</sys:String>
     <sys:String x:Key="ProtectionStatusUnavailable">Windows protection status could not be checked.</sys:String>
     <sys:String x:Key="AutorunProtectionEnabled">Windows USB protection was enabled successfully.</sys:String>
@@ -72,4 +72,68 @@
     <sys:String x:Key="NotAvailable">Not available</sys:String>
     <sys:String x:Key="Close">Close</sys:String>
     <sys:String x:Key="LearnMoreOnline">Read more online</sys:String>
+
+    <sys:String x:Key="ScanningStatus">Scanning the selected USB drive. No files are being modified.</sys:String>
+    <sys:String x:Key="ScanningProgress">Scanned {0} items — {1}</sys:String>
+    <sys:String x:Key="CancelScan">Cancel</sys:String>
+    <sys:String x:Key="ScanSummary">{0} items scanned · {1} findings · {2} recoverable · {3} high risk</sys:String>
+    <sys:String x:Key="ScanCompletedClean">Scan completed. No suspicious or hidden user items were found.</sys:String>
+    <sys:String x:Key="ScanCompletedWithFindings">Scan completed. Review the findings before taking any repair action.</sys:String>
+    <sys:String x:Key="ScanCleanTitle">No issues found</sys:String>
+    <sys:String x:Key="ScanCleanDescription">NoHidden did not find hidden user content or suspicious USB malware patterns in this scan.</sys:String>
+    <sys:String x:Key="ScanCanceledTitle">Scan canceled</sys:String>
+    <sys:String x:Key="ScanCanceledDescription">The scan was stopped. No files were changed.</sys:String>
+    <sys:String x:Key="ScanCanceledStatus">USB scan canceled. No files were changed.</sys:String>
+    <sys:String x:Key="ScanFailedTitle">Scan could not finish</sys:String>
+    <sys:String x:Key="ScanFailedDescription">Check that the USB drive is still connected and accessible, then try again.</sys:String>
+    <sys:String x:Key="RestoreVisibility">Restore visibility</sys:String>
+    <sys:String x:Key="RestoreAllHidden">Restore all hidden items</sys:String>
+    <sys:String x:Key="VisibilityRestored">The selected item is visible again.</sys:String>
+    <sys:String x:Key="VisibilityRestoredMultiple">All detected hidden user items were restored successfully.</sys:String>
+    <sys:String x:Key="VisibilityRestorePartial">{0} items restored; {1} could not be restored.</sys:String>
+
+    <sys:String x:Key="SeverityInfo">Recovery</sys:String>
+    <sys:String x:Key="SeverityLow">Low</sys:String>
+    <sys:String x:Key="SeverityMedium">Suspicious</sys:String>
+    <sys:String x:Key="SeverityHigh">High risk</sys:String>
+    <sys:String x:Key="SeverityCritical">Critical</sys:String>
+
+    <sys:String x:Key="FindingTypeHiddenItem">Hidden item</sys:String>
+    <sys:String x:Key="FindingTypeAutorun">Autorun file</sys:String>
+    <sys:String x:Key="FindingTypeSuspiciousScript">Script</sys:String>
+    <sys:String x:Key="FindingTypeSuspiciousExecutable">Executable</sys:String>
+    <sys:String x:Key="FindingTypeDoubleExtension">Double extension</sys:String>
+    <sys:String x:Key="FindingTypeFolderMasquerading">Folder impersonation</sys:String>
+    <sys:String x:Key="FindingTypeSuspiciousShortcut">Shortcut</sys:String>
+    <sys:String x:Key="FindingTypeUnknown">Finding</sys:String>
+
+    <sys:String x:Key="ReasonHiddenAttributes">This item has Hidden or System attributes. NoHidden can safely restore its visibility without changing its contents.</sys:String>
+    <sys:String x:Key="ReasonAutorunPresent">autorun.inf exists on the USB drive. Its presence is not automatically malware, but it deserves review.</sys:String>
+    <sys:String x:Key="ReasonAutorunSuspicious">autorun.inf contains a command that can launch an executable, script or command interpreter.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousScript">This script type can execute commands. It is flagged for review; NoHidden will not delete it automatically.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousExecutable">This executable is in a location commonly abused by USB malware. It is flagged for review only.</sys:String>
+    <sys:String x:Key="ReasonHiddenDangerous">This executable or script is hidden/system-marked, which is a strong USB-malware indicator.</sys:String>
+    <sys:String x:Key="ReasonDoubleExtension">The filename uses a document/media extension followed by an executable extension, a common disguise technique.</sys:String>
+    <sys:String x:Key="ReasonFolderMasquerading">An executable or shortcut has the same name as a nearby folder, which can be used to impersonate that folder.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousShortcutCommand">This shortcut launches a command interpreter such as CMD, PowerShell or Windows Script Host.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousShortcutPayload">This shortcut points to a hidden or executable/script payload.</sys:String>
+    <sys:String x:Key="ReasonRootShortcut">A shortcut was found at the USB root. It is flagged for review because shortcut malware commonly uses this pattern.</sys:String>
+
+    <sys:String x:Key="AntivirusDetailsToolTip">Show antivirus details</sys:String>
+    <sys:String x:Key="ScanWithDefender">Defender scan</sys:String>
+    <sys:String x:Key="ScanWithDefenderToolTip">Scan this file with Microsoft Defender without automatic remediation</sys:String>
+    <sys:String x:Key="NeutralizeFile">Neutralize</sys:String>
+    <sys:String x:Key="NeutralizeFileToolTip">Rename the file with a .nohidden-disabled suffix so it cannot be launched normally</sys:String>
+    <sys:String x:Key="NeutralizeConfirmationTitle">Neutralize file</sys:String>
+    <sys:String x:Key="NeutralizeConfirmation">The file “{0}” will not be deleted. It will be renamed with the safe .nohidden-disabled suffix. Continue?</sys:String>
+    <sys:String x:Key="FileNeutralized">The file was neutralized as “{0}”.</sys:String>
+    <sys:String x:Key="DefenderScanStarting">Microsoft Defender is scanning the file. Windows UAC may appear if elevated access is required.</sys:String>
+    <sys:String x:Key="DefenderScanNoAction">Microsoft Defender finished the scan without reporting an immediate action requirement.</sys:String>
+    <sys:String x:Key="DefenderScanAttention">Microsoft Defender reported a detection, required action, or scan problem. Do not run the file; neutralize it if you are unsure.</sys:String>
+    <sys:String x:Key="DefenderScanFailed">Microsoft Defender could not complete the file scan.</sys:String>
+
+    <sys:String x:Key="CheckVirusTotal">VirusTotal</sys:String>
+    <sys:String x:Key="CheckVirusTotalToolTip">Calculate SHA-256 locally and open the matching VirusTotal report; the file itself is not uploaded</sys:String>
+    <sys:String x:Key="HashingFile">Calculating SHA-256 for the online reputation check…</sys:String>
+    <sys:String x:Key="VirusTotalOpened">The SHA-256 report was opened in VirusTotal. The file itself was not uploaded.</sys:String>
 </ResourceDictionary>

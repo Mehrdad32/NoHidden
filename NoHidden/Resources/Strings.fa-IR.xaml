@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppTitle">NoHidden</sys:String>
     <sys:String x:Key="AppSubtitle">بازیابی و محافظت در برابر بدافزارهای USB</sys:String>
-    <sys:String x:Key="AppVersion">نسخه ۳.۰.۰ - در حال توسعه</sys:String>
+    <sys:String x:Key="AppVersion">نسخه ۳.۰.۰</sys:String>
 
     <sys:String x:Key="WindowsProtection">محافظت ویندوز</sys:String>
     <sys:String x:Key="AntivirusProtection">آنتی‌ویروس</sys:String>
@@ -17,7 +17,7 @@
     <sys:String x:Key="NotDetected">شناسایی نشد</sys:String>
     <sys:String x:Key="Unknown">نامشخص</sys:String>
 
-    <sys:String x:Key="AutorunProtectionActive">AutoRun و AutoPlay برای کاربر فعلی ویندوز غیرفعال هستند.</sys:String>
+    <sys:String x:Key="AutorunProtectionActive">AutoRun و AutoPlay در سطح سیستم ویندوز غیرفعال هستند.</sys:String>
     <sys:String x:Key="AutorunProtectionRecommended">AutoRun یا AutoPlay فعال است. بهتر است قبل از باز کردن فلش‌های ناشناس محافظت ویندوز فعال شود.</sys:String>
     <sys:String x:Key="ProtectionStatusUnavailable">وضعیت محافظت ویندوز قابل بررسی نبود.</sys:String>
     <sys:String x:Key="AutorunProtectionEnabled">محافظت USB ویندوز با موفقیت فعال شد.</sys:String>
@@ -72,4 +72,68 @@
     <sys:String x:Key="NotAvailable">در دسترس نیست</sys:String>
     <sys:String x:Key="Close">بستن</sys:String>
     <sys:String x:Key="LearnMoreOnline">مطالعه بیشتر در سایت</sys:String>
+
+    <sys:String x:Key="ScanningStatus">حافظه USB در حال بررسی است. در زمان اسکن هیچ فایلی تغییر نمی‌کند.</sys:String>
+    <sys:String x:Key="ScanningProgress">{0} مورد بررسی شد — {1}</sys:String>
+    <sys:String x:Key="CancelScan">توقف</sys:String>
+    <sys:String x:Key="ScanSummary">{0} مورد بررسی شد · {1} یافته · {2} مورد قابل‌بازیابی · {3} مورد پرخطر</sys:String>
+    <sys:String x:Key="ScanCompletedClean">بررسی کامل شد و مورد مشکوک یا فایل کاربری مخفی‌شده‌ای پیدا نشد.</sys:String>
+    <sys:String x:Key="ScanCompletedWithFindings">بررسی کامل شد. پیش از هر عملیات ترمیم، یافته‌ها را مرور کنید.</sys:String>
+    <sys:String x:Key="ScanCleanTitle">موردی پیدا نشد</sys:String>
+    <sys:String x:Key="ScanCleanDescription">NoHidden در این بررسی فایل کاربری مخفی‌شده یا الگوی مشکوک بدافزار USB پیدا نکرد.</sys:String>
+    <sys:String x:Key="ScanCanceledTitle">بررسی متوقف شد</sys:String>
+    <sys:String x:Key="ScanCanceledDescription">اسکن متوقف شد و هیچ فایلی تغییر نکرد.</sys:String>
+    <sys:String x:Key="ScanCanceledStatus">بررسی حافظه USB متوقف شد و هیچ فایلی تغییر نکرد.</sys:String>
+    <sys:String x:Key="ScanFailedTitle">بررسی کامل نشد</sys:String>
+    <sys:String x:Key="ScanFailedDescription">مطمئن شوید حافظه USB همچنان متصل و قابل‌دسترسی است و دوباره تلاش کنید.</sys:String>
+    <sys:String x:Key="RestoreVisibility">نمایش مجدد</sys:String>
+    <sys:String x:Key="RestoreAllHidden">نمایش همه موارد مخفی</sys:String>
+    <sys:String x:Key="VisibilityRestored">مورد انتخاب‌شده دوباره قابل‌مشاهده شد.</sys:String>
+    <sys:String x:Key="VisibilityRestoredMultiple">همه موارد کاربری مخفی‌شده با موفقیت دوباره قابل‌مشاهده شدند.</sys:String>
+    <sys:String x:Key="VisibilityRestorePartial">{0} مورد بازیابی شد و بازیابی {1} مورد انجام نشد.</sys:String>
+
+    <sys:String x:Key="SeverityInfo">بازیابی</sys:String>
+    <sys:String x:Key="SeverityLow">کم</sys:String>
+    <sys:String x:Key="SeverityMedium">مشکوک</sys:String>
+    <sys:String x:Key="SeverityHigh">پرخطر</sys:String>
+    <sys:String x:Key="SeverityCritical">بحرانی</sys:String>
+
+    <sys:String x:Key="FindingTypeHiddenItem">مورد مخفی‌شده</sys:String>
+    <sys:String x:Key="FindingTypeAutorun">فایل Autorun</sys:String>
+    <sys:String x:Key="FindingTypeSuspiciousScript">اسکریپت</sys:String>
+    <sys:String x:Key="FindingTypeSuspiciousExecutable">فایل اجرایی</sys:String>
+    <sys:String x:Key="FindingTypeDoubleExtension">پسوند دوگانه</sys:String>
+    <sys:String x:Key="FindingTypeFolderMasquerading">جعل پوشه</sys:String>
+    <sys:String x:Key="FindingTypeSuspiciousShortcut">میانبر</sys:String>
+    <sys:String x:Key="FindingTypeUnknown">یافته</sys:String>
+
+    <sys:String x:Key="ReasonHiddenAttributes">این مورد دارای ویژگی Hidden یا System است. NoHidden می‌تواند بدون تغییر محتوا، آن را دوباره قابل‌مشاهده کند.</sys:String>
+    <sys:String x:Key="ReasonAutorunPresent">فایل autorun.inf روی حافظه USB وجود دارد. وجود این فایل به‌تنهایی به معنی بدافزار نیست، اما باید بررسی شود.</sys:String>
+    <sys:String x:Key="ReasonAutorunSuspicious">فایل autorun.inf شامل دستوری برای اجرای فایل اجرایی، اسکریپت یا مفسر دستورات است.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousScript">این نوع اسکریپت می‌تواند دستور اجرا کند. NoHidden فقط آن را برای بررسی علامت‌گذاری می‌کند و خودکار حذفش نمی‌کند.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousExecutable">این فایل اجرایی در محلی قرار دارد که معمولاً توسط بدافزارهای USB سوءاستفاده می‌شود. فعلاً فقط برای بررسی علامت‌گذاری شده است.</sys:String>
+    <sys:String x:Key="ReasonHiddenDangerous">این فایل اجرایی یا اسکریپت با ویژگی Hidden/System مخفی شده و این ترکیب نشانه مهمی از بدافزار USB است.</sys:String>
+    <sys:String x:Key="ReasonDoubleExtension">نام فایل ابتدا شبیه سند یا فایل چندرسانه‌ای است و سپس پسوند اجرایی دارد؛ روشی رایج برای فریب کاربر.</sys:String>
+    <sys:String x:Key="ReasonFolderMasquerading">فایل اجرایی یا میانبر همنام یک پوشه مجاور است و می‌تواند برای جعل ظاهر آن پوشه استفاده شود.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousShortcutCommand">این میانبر یکی از مفسرهای دستورات مانند CMD، PowerShell یا Windows Script Host را اجرا می‌کند.</sys:String>
+    <sys:String x:Key="ReasonSuspiciousShortcutPayload">این میانبر به یک فایل مخفی، اجرایی یا اسکریپت اشاره می‌کند.</sys:String>
+    <sys:String x:Key="ReasonRootShortcut">یک میانبر در ریشه حافظه USB پیدا شد. این الگو در بدافزارهای Shortcut رایج است و برای بررسی علامت‌گذاری شده است.</sys:String>
+
+    <sys:String x:Key="AntivirusDetailsToolTip">نمایش جزئیات آنتی‌ویروس</sys:String>
+    <sys:String x:Key="ScanWithDefender">بررسی با Defender</sys:String>
+    <sys:String x:Key="ScanWithDefenderToolTip">این فایل را با Microsoft Defender و بدون حذف خودکار بررسی کن</sys:String>
+    <sys:String x:Key="NeutralizeFile">غیرفعال‌سازی</sys:String>
+    <sys:String x:Key="NeutralizeFileToolTip">پسوند فایل را به .nohidden-disabled تغییر می‌دهد تا با دوبار کلیک اجرا نشود</sys:String>
+    <sys:String x:Key="NeutralizeConfirmationTitle">غیرفعال‌سازی فایل</sys:String>
+    <sys:String x:Key="NeutralizeConfirmation">فایل «{0}» بدون حذف شدن به پسوند امن .nohidden-disabled تغییر نام داده می‌شود. ادامه می‌دهید؟</sys:String>
+    <sys:String x:Key="FileNeutralized">فایل با نام جدید «{0}» غیرفعال شد.</sys:String>
+    <sys:String x:Key="DefenderScanStarting">Microsoft Defender در حال بررسی فایل است. در صورت نیاز پنجره UAC ویندوز نمایش داده می‌شود.</sys:String>
+    <sys:String x:Key="DefenderScanNoAction">بررسی Microsoft Defender کامل شد و نیاز به اقدام فوری گزارش نشد.</sys:String>
+    <sys:String x:Key="DefenderScanAttention">Microsoft Defender یک تشخیص، نیاز به اقدام یا مشکل در اسکن گزارش کرد. فایل را اجرا نکنید و در صورت تردید آن را غیرفعال کنید.</sys:String>
+    <sys:String x:Key="DefenderScanFailed">بررسی فایل با Microsoft Defender کامل نشد.</sys:String>
+
+    <sys:String x:Key="CheckVirusTotal">VirusTotal</sys:String>
+    <sys:String x:Key="CheckVirusTotalToolTip">فقط SHA-256 فایل را محاسبه می‌کند و صفحه گزارش همان Hash را در VirusTotal باز می‌کند؛ فایل آپلود نمی‌شود</sys:String>
+    <sys:String x:Key="HashingFile">در حال محاسبه SHA-256 فایل برای بررسی آنلاین…</sys:String>
+    <sys:String x:Key="VirusTotalOpened">گزارش SHA-256 فایل در VirusTotal باز شد. خود فایل آپلود نشده است.</sys:String>
 </ResourceDictionary>

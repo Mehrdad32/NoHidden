@@ -45,6 +45,25 @@ public partial class App : Application
         MainWindow = mainWindow;
         mainWindow.Show();
 
+#if DEBUG
+        bool testAdminDialog =
+            e.Args.Any(
+                argument => string.Equals(
+                    argument,
+                    "--test-admin-dialog",
+                    StringComparison.OrdinalIgnoreCase));
+
+        if (testAdminDialog)
+        {
+            var dialog = new AdminPermissionDialog
+            {
+                Owner = mainWindow
+            };
+
+            dialog.ShowDialog();
+        }
+#endif
+
         bool applyAutorunProtection =
             e.Args.Any(
                 argument => string.Equals(

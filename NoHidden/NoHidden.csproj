@@ -17,6 +17,14 @@
     <VersionPrefix>3.0.0</VersionPrefix>
     <AssemblyName>NoHidden</AssemblyName>
     <RootNamespace>NoHidden</RootNamespace>
+
+    <Product>NoHidden</Product>
+    <Title>NoHidden</Title>
+    <Authors>Mehrdad32</Authors>
+    <Company>Mehrdad32</Company>
+    <Description>USB hidden-file recovery and defensive USB-malware inspection utility for Windows.</Description>
+    <RepositoryUrl>https://github.com/Mehrdad32/NoHidden</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

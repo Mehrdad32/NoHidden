@@ -210,6 +210,22 @@ NoHidden is designed to be **offline-first**.
 
 ---
 
+## Code signing policy
+
+NoHidden is being prepared to use **Authenticode code signing** for official releases through the SignPath Foundation Open Source program.
+
+- Only binaries built from this repository through the official release pipeline are eligible for signing.
+- Signable builds must run on GitHub-hosted runners and have verifiable build origin.
+- Signed files use `NoHidden` as the product name and their product version must match the GitHub release version.
+- Older releases published before code signing is enabled, including `v3.0.0`, remain unsigned.
+- A valid digital signature verifies publisher identity and file integrity after signing; it is not, by itself, a claim that software is malware-free.
+
+Full policy and signature-verification instructions:
+
+**[Code signing policy](CODE_SIGNING.md)**
+
+---
+
 ## Languages
 
 - Persian (فارسی)

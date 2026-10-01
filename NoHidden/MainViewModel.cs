@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoHidden.Managers;
@@ -17,6 +18,7 @@ public partial class MainViewModel : ObservableObject
     private readonly FileVisibilityRepairService _visibilityRepairService = new();
     private readonly FileNeutralizationService _neutralizationService = new();
     private readonly DefenderScanService _defenderScanService = new();
+    private readonly FileHashService _fileHashService = new();
 
     private AntivirusInfo? _currentAntivirusInfo;
     private CancellationTokenSource? _scanCancellationTokenSource;
@@ -576,6 +578,40 @@ public partial class MainViewModel : ObservableObject
             SetFormattedStatus(
                 "FileNeutralized",
                 Path.GetFileName(result.NeutralizedPath));
+        }
+        catch (Exception ex)
+        {
+            SetErrorStatus(ex);
+        }
+    }
+
+    [RelayCommand]
+    private async Task CheckVirusTotalAsync(ScanFindingViewModel? item)
+    {
+        if (item is null ||
+            !item.CanCheckOnline)
+        {
+            return;
+        }
+
+        SetStatusMessage("HashingFile");
+
+        try
+        {
+            string sha256 =
+                await _fileHashService.ComputeSha256Async(
+                    item.Finding.Path);
+
+            string url =
+                $"https://www.virustotal.com/gui/file/{sha256}";
+
+            Process.Start(
+                new ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                });
+
+            SetStatusMessage("VirusTotalOpened");
         }
         catch (Exception ex)
         {

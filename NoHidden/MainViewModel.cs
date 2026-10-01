@@ -15,6 +15,8 @@ public partial class MainViewModel : ObservableObject
     private readonly DriveManager _driveManager = new();
     private readonly UsbScanner _usbScanner = new();
     private readonly FileVisibilityRepairService _visibilityRepairService = new();
+    private readonly FileNeutralizationService _neutralizationService = new();
+    private readonly DefenderScanService _defenderScanService = new();
 
     private AntivirusInfo? _currentAntivirusInfo;
     private CancellationTokenSource? _scanCancellationTokenSource;
@@ -413,7 +415,10 @@ public partial class MainViewModel : ObservableObject
                 report.Findings
                     .OrderByDescending(finding => finding.Severity)
                     .ThenBy(finding => finding.RelativePath)
-                    .Select(finding => new ScanFindingViewModel(finding)));
+                    .Select(
+                        finding => new ScanFindingViewModel(
+                            finding,
+                            _defenderScanService.IsAvailable)));
 
             ScanProgressVisibility = Visibility.Collapsed;
 
@@ -488,6 +493,89 @@ public partial class MainViewModel : ObservableObject
 
             RemoveFinding(item);
             SetStatusMessage("VisibilityRestored");
+        }
+        catch (Exception ex)
+        {
+            SetErrorStatus(ex);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ScanWithDefenderAsync(ScanFindingViewModel? item)
+    {
+        if (item is null ||
+            !item.CanScanWithDefender)
+        {
+            return;
+        }
+
+        SetStatusMessage("DefenderScanStarting");
+
+        try
+        {
+            DefenderFileScanResult result =
+                await _defenderScanService.ScanFileAsync(
+                    item.Finding.Path);
+
+            SetStatusMessage(
+                result.Status switch
+                {
+                    DefenderFileScanStatus.CleanOrNoActionRequired =>
+                        "DefenderScanNoAction",
+
+                    DefenderFileScanStatus.DetectionOrScanProblem =>
+                        "DefenderScanAttention",
+
+                    _ =>
+                        "DefenderScanFailed"
+                });
+        }
+        catch (Exception ex) when (ElevationManager.IsElevationCanceled(ex))
+        {
+            SetStatusMessage("AdminPermissionCanceled");
+        }
+        catch (Exception ex)
+        {
+            SetErrorStatus(ex);
+        }
+    }
+
+    [RelayCommand]
+    private void NeutralizeFinding(ScanFindingViewModel? item)
+    {
+        if (item is null ||
+            !item.CanNeutralize ||
+            SelectedDrive is null)
+        {
+            return;
+        }
+
+        MessageBoxResult confirmation =
+            MessageBox.Show(
+                string.Format(
+                    Resource("NeutralizeConfirmation"),
+                    item.Path),
+                Resource("NeutralizeConfirmationTitle"),
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+        if (confirmation != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            NeutralizationResult result =
+                _neutralizationService.Neutralize(
+                    SelectedDrive.RootPath,
+                    item.Finding.Path);
+
+            RemoveFinding(item);
+
+            SetFormattedStatus(
+                "FileNeutralized",
+                Path.GetFileName(result.NeutralizedPath));
         }
         catch (Exception ex)
         {
@@ -629,6 +717,15 @@ public partial class MainViewModel : ObservableObject
         RefreshStatusMessage();
     }
 
+    private void SetFormattedStatus(
+        string resourceKey,
+        string detail)
+    {
+        _statusMessageResourceKey = resourceKey;
+        _statusMessageDetail = detail;
+        RefreshStatusMessage();
+    }
+
     private void SetErrorStatus(Exception exception)
     {
         _statusMessageResourceKey = "Error";
@@ -662,6 +759,16 @@ public partial class MainViewModel : ObservableObject
 
                 return;
             }
+        }
+
+        if (_statusMessageResourceKey == "FileNeutralized" &&
+            !string.IsNullOrWhiteSpace(_statusMessageDetail))
+        {
+            StatusMessage = string.Format(
+                Resource("FileNeutralized"),
+                _statusMessageDetail);
+
+            return;
         }
 
         StatusMessage = Resource(_statusMessageResourceKey);

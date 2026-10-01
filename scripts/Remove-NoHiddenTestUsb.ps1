@@ -42,15 +42,41 @@ foreach ($path in $paths) {
         throw "Fixture contains an unsafe path outside the selected drive: $fullPath"
     }
 
-    if (Test-Path -LiteralPath $fullPath) {
+    $candidates = @($fullPath)
+
+    $parentDirectory = Split-Path -Parent $fullPath
+    $leafName = Split-Path -Leaf $fullPath
+
+    if (Test-Path -LiteralPath $parentDirectory -PathType Container) {
+        $neutralizedPattern = $leafName + '.nohidden-disabled*'
+
+        $candidates += Get-ChildItem -LiteralPath $parentDirectory -Filter $neutralizedPattern -Force -ErrorAction SilentlyContinue |
+            Where-Object {
+                $_.Name -eq ($leafName + '.nohidden-disabled') -or
+                $_.Name -match ('^' + [regex]::Escape($leafName + '.nohidden-disabled.') + '\d+
+}
+
+Remove-Item -LiteralPath $markerPath -Force
+
+Write-Host "NoHidden test fixture removed from $root." -ForegroundColor Green
+)
+            } |
+            Select-Object -ExpandProperty FullName
+    }
+
+    foreach ($candidate in ($candidates | Select-Object -Unique)) {
+        if (-not (Test-Path -LiteralPath $candidate)) {
+            continue
+        }
+
         try {
-            [System.IO.File]::SetAttributes($fullPath, [System.IO.FileAttributes]::Normal)
+            [System.IO.File]::SetAttributes($candidate, [System.IO.FileAttributes]::Normal)
         }
         catch {
             # Directories or files may already have been restored/deleted by NoHidden.
         }
 
-        Remove-Item -LiteralPath $fullPath -Recurse -Force
+        Remove-Item -LiteralPath $candidate -Recurse -Force
     }
 }
 

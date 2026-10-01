@@ -1,14 +1,20 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using NoHidden.Models;
+using System.IO;
 using System.Windows;
 
 namespace NoHidden.ViewModels;
 
 public partial class ScanFindingViewModel : ObservableObject
 {
-    public ScanFindingViewModel(ScanFinding finding)
+    private readonly bool _defenderAvailable;
+
+    public ScanFindingViewModel(
+        ScanFinding finding,
+        bool defenderAvailable)
     {
         Finding = finding;
+        _defenderAvailable = defenderAvailable;
         RefreshLocalization();
     }
 
@@ -17,6 +23,16 @@ public partial class ScanFindingViewModel : ObservableObject
     public string Path => Finding.RelativePath;
 
     public bool CanRestoreVisibility => Finding.CanRestoreVisibility;
+
+    public bool CanNeutralize =>
+        !Finding.CanRestoreVisibility &&
+        Finding.Type is not FindingType.HiddenItem &&
+        File.Exists(Finding.Path);
+
+    public bool CanScanWithDefender =>
+        _defenderAvailable &&
+        !Finding.CanRestoreVisibility &&
+        File.Exists(Finding.Path);
 
     [ObservableProperty]
     private string typeText = string.Empty;
@@ -34,7 +50,19 @@ public partial class ScanFindingViewModel : ObservableObject
     private string restoreActionText = string.Empty;
 
     [ObservableProperty]
+    private string defenderActionText = string.Empty;
+
+    [ObservableProperty]
+    private string neutralizeActionText = string.Empty;
+
+    [ObservableProperty]
     private Visibility restoreActionVisibility;
+
+    [ObservableProperty]
+    private Visibility defenderActionVisibility;
+
+    [ObservableProperty]
+    private Visibility neutralizeActionVisibility;
 
     public void RefreshLocalization()
     {
@@ -42,9 +70,23 @@ public partial class ScanFindingViewModel : ObservableObject
         SeverityText = Resource(GetSeverityResourceKey(Finding.Severity));
         SeverityColor = GetSeverityColor(Finding.Severity);
         ReasonText = Resource(Finding.ReasonKey);
+
         RestoreActionText = Resource("RestoreVisibility");
+        DefenderActionText = Resource("ScanWithDefender");
+        NeutralizeActionText = Resource("NeutralizeFile");
+
         RestoreActionVisibility =
             CanRestoreVisibility
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+        DefenderActionVisibility =
+            CanScanWithDefender
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+        NeutralizeActionVisibility =
+            CanNeutralize
                 ? Visibility.Visible
                 : Visibility.Collapsed;
     }

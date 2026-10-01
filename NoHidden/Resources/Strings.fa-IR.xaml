@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppTitle">NoHidden</sys:String>
     <sys:String x:Key="AppSubtitle">بازیابی و محافظت در برابر بدافزارهای USB</sys:String>
-    <sys:String x:Key="AppVersion">نسخه ۳.۰.۰ - در حال توسعه</sys:String>
+    <sys:String x:Key="AppVersion">نسخه ۳.۰.۰</sys:String>
 
     <sys:String x:Key="WindowsProtection">محافظت ویندوز</sys:String>
     <sys:String x:Key="AntivirusProtection">آنتی‌ویروس</sys:String>

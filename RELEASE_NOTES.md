@@ -37,6 +37,7 @@ Microsoft Defender scans are invoked without automatic remediation, and VirusTot
 - Binaries are not code-signed yet and may trigger Windows SmartScreen.
 - Heuristic findings are not definitive malware verdicts.
 - Neutralized files do not yet have an in-app Undo button.
+- AutoRun/AutoPlay protection does not yet have an in-app rollback button.
 - VirusTotal results open in the browser instead of being displayed inline.
 - Direct integration with third-party antivirus CLI tools is not included.
 - Devices reported by Windows as Fixed rather than Removable may not appear in the USB list.

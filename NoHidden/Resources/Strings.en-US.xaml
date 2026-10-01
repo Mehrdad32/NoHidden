@@ -17,7 +17,7 @@
     <sys:String x:Key="NotDetected">Not detected</sys:String>
     <sys:String x:Key="Unknown">Unknown</sys:String>
 
-    <sys:String x:Key="AutorunProtectionActive">AutoRun and AutoPlay are disabled for this Windows user.</sys:String>
+    <sys:String x:Key="AutorunProtectionActive">AutoRun and AutoPlay are disabled system-wide on this Windows installation.</sys:String>
     <sys:String x:Key="AutorunProtectionRecommended">AutoRun or AutoPlay is enabled. Protection is recommended before opening unknown USB drives.</sys:String>
     <sys:String x:Key="ProtectionStatusUnavailable">Windows protection status could not be checked.</sys:String>
     <sys:String x:Key="AutorunProtectionEnabled">Windows USB protection was enabled successfully.</sys:String>

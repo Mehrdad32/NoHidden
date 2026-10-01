@@ -50,41 +50,9 @@ foreach ($path in $paths) {
     $leafName = Split-Path -Leaf $fullPath
 
     if (Test-Path -LiteralPath $parentDirectory -PathType Container) {
-        $neutralizedPrefix = $leafName + '.nohidden-disabled'
+        $neutralizedPattern = $leafName + '.nohidden-disabled*'
 
-        Get-ChildItem -LiteralPath $parentDirectory -Force -ErrorAction SilentlyContinue |
-            Where-Object {
-                $_.Name -eq $neutralizedPrefix -or
-                $_.Name -match ('^' + [regex]::Escape($neutralizedPrefix) + '\.\d+
-            } |
-            ForEach-Object {
-                $candidates.Add($_.FullName)
-            }
-    }
-
-    foreach ($candidate in ($candidates | Select-Object -Unique)) {
-        if (-not (Test-Path -LiteralPath $candidate)) {
-            continue
-        }
-
-        try {
-            [System.IO.File]::SetAttributes(
-                $candidate,
-                [System.IO.FileAttributes]::Normal)
-        }
-        catch {
-            # The item may be a directory or may already have been changed by NoHidden.
-        }
-
-        Remove-Item -LiteralPath $candidate -Recurse -Force
-    }
-}
-
-Remove-Item -LiteralPath $markerPath -Force
-
-Write-Host "NoHidden test fixture removed from $root." -ForegroundColor Green
-)
-            } |
+        Get-ChildItem -LiteralPath $parentDirectory -Filter $neutralizedPattern -Force -ErrorAction SilentlyContinue |
             ForEach-Object {
                 $candidates.Add($_.FullName)
             }

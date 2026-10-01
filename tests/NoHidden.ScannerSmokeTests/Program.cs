@@ -126,6 +126,14 @@ try
         !repairedAttributes.HasFlag(FileAttributes.System),
         "Visibility repair did not remove Hidden/System attributes.");
 
+    var hashService = new FileHashService();
+    string sha256 = await hashService.ComputeSha256Async(hiddenFile);
+
+    Assert(
+        sha256.Length == 64 &&
+        sha256.All(Uri.IsHexDigit),
+        "SHA-256 service did not return a valid hexadecimal hash.");
+
     var neutralizationService = new FileNeutralizationService();
     NeutralizationResult neutralization =
         neutralizationService.Neutralize(

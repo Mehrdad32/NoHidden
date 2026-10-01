@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   release:
-    if: startsWith(github.event.head_commit.message, 'release: v3.0.0')
+    if: "${{ startsWith(github.event.head_commit.message, 'release: v3.0.0') }}"
     runs-on: windows-latest
     env:
       RELEASE_VERSION: v3.0.0

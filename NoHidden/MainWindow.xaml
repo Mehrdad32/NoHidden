@@ -444,43 +444,55 @@
                                 Visibility="{Binding DisableAutoRunButtonVisibility}"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 HorizontalAlignment="Left"
-                                Margin="0,14,0,0" />
+                                Margin="0,10,0,0" />
                     </Grid>
                 </Border>
 
                 <Border Grid.Column="2"
                         Style="{StaticResource CardStyle}"
-                        MinHeight="150">
+                        MinHeight="118">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
+
                             <TextBlock Text="{DynamicResource AntivirusProtection}"
                                        FontSize="15"
-                                       FontWeight="SemiBold" />
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+
                             <Border Grid.Column="1"
                                     BorderBrush="{Binding AntivirusStatusColor}"
                                     BorderThickness="1"
                                     CornerRadius="10"
                                     Padding="8,3"
-                                    Margin="8,0,0,0">
+                                    Margin="8,0,6,0"
+                                    VerticalAlignment="Center">
                                 <TextBlock Text="{Binding AntivirusBadgeText}"
                                            Foreground="{Binding AntivirusStatusColor}"
                                            FontSize="11"
                                            FontWeight="SemiBold" />
                             </Border>
+
+                            <Button Grid.Column="2"
+                                    Content="i"
+                                    Command="{Binding OpenAntivirusInfoCommand}"
+                                    Visibility="{Binding LearnMoreButtonVisibility}"
+                                    Style="{StaticResource InfoIconButtonStyle}"
+                                    ToolTip="{DynamicResource AntivirusDetailsToolTip}"
+                                    VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Grid.Row="1"
-                              Margin="0,14,0,0">
+                              Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -493,22 +505,15 @@
                             <TextBlock Grid.Column="1"
                                        Text="{Binding AntivirusStatus}"
                                        Foreground="{StaticResource TextSecondaryBrush}"
-                                       FontSize="13"
-                                       LineHeight="20" />
+                                       FontSize="12"
+                                       LineHeight="18" />
                         </Grid>
-
-                        <Button Grid.Row="2"
-                                Content="{DynamicResource LearnMore}"
-                                Command="{Binding OpenAntivirusInfoCommand}"
-                                Visibility="{Binding LearnMoreButtonVisibility}"
-                                Style="{StaticResource LinkButtonStyle}"
-                                Margin="0,14,0,0" />
                     </Grid>
                 </Border>
 
                 <Border Grid.Column="4"
                         Style="{StaticResource CardStyle}"
-                        MinHeight="150">
+                        MinHeight="118">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -520,7 +525,7 @@
                                    FontWeight="SemiBold" />
 
                         <Grid Grid.Row="1"
-                              Margin="0,14,0,0">
+                              Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -677,7 +682,7 @@
                         </StackPanel>
 
                         <Grid Visibility="{Binding ScanResultsVisibility}"
-                              Margin="0,14,0,0">
+                              Margin="0,10,0,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />

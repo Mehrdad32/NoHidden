@@ -199,6 +199,7 @@ NoHidden is designed to be **offline-first**.
 - Heuristic findings are not definitive malware verdicts.
 - NoHidden intentionally does not auto-delete suspicious files.
 - Neutralize has no in-app Undo in 3.0.0; trusted files can be restored manually by removing the `.nohidden-disabled` suffix.
+- There is no in-app control in 3.0.0 to restore the previous AutoRun/AutoPlay policy after using Protect Windows; that action applies a system-wide policy.
 - VirusTotal results are not displayed inline yet; NoHidden opens the hash report in the browser and does not upload the file.
 - Defender Scan depends on the Microsoft Defender command-line scanner being available.
 - Direct third-party antivirus CLI integration is not included yet.

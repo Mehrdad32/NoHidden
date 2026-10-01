@@ -34,6 +34,10 @@ public partial class ScanFindingViewModel : ObservableObject
         !Finding.CanRestoreVisibility &&
         File.Exists(Finding.Path);
 
+    public bool CanCheckOnline =>
+        !Finding.CanRestoreVisibility &&
+        File.Exists(Finding.Path);
+
     [ObservableProperty]
     private string typeText = string.Empty;
 
@@ -56,6 +60,9 @@ public partial class ScanFindingViewModel : ObservableObject
     private string neutralizeActionText = string.Empty;
 
     [ObservableProperty]
+    private string onlineCheckActionText = string.Empty;
+
+    [ObservableProperty]
     private Visibility restoreActionVisibility;
 
     [ObservableProperty]
@@ -63,6 +70,9 @@ public partial class ScanFindingViewModel : ObservableObject
 
     [ObservableProperty]
     private Visibility neutralizeActionVisibility;
+
+    [ObservableProperty]
+    private Visibility onlineCheckActionVisibility;
 
     public void RefreshLocalization()
     {
@@ -74,6 +84,7 @@ public partial class ScanFindingViewModel : ObservableObject
         RestoreActionText = Resource("RestoreVisibility");
         DefenderActionText = Resource("ScanWithDefender");
         NeutralizeActionText = Resource("NeutralizeFile");
+        OnlineCheckActionText = Resource("CheckVirusTotal");
 
         RestoreActionVisibility =
             CanRestoreVisibility
@@ -87,6 +98,11 @@ public partial class ScanFindingViewModel : ObservableObject
 
         NeutralizeActionVisibility =
             CanNeutralize
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+        OnlineCheckActionVisibility =
+            CanCheckOnline
                 ? Visibility.Visible
                 : Visibility.Collapsed;
     }

@@ -19,6 +19,8 @@ if ($marker.Fixture -ne 'NoHidden USB Scanner Test Fixture' -or $marker.Version 
     throw "The fixture marker is invalid. Refusing to remove anything."
 }
 
+$rootFullPath = [System.IO.Path]::GetFullPath($root)
+
 $paths = @(
     $marker.Paths.HiddenFolder
     $marker.Paths.HiddenFile
@@ -31,37 +33,33 @@ $paths = @(
 )
 
 foreach ($path in $paths) {
-    if ([string]::IsNullOrWhiteSpace($path)) {
+    if ([string]::IsNullOrWhiteSpace([string]$path)) {
         continue
     }
 
     $fullPath = [System.IO.Path]::GetFullPath([string]$path)
-    $rootFullPath = [System.IO.Path]::GetFullPath($root)
 
     if (-not $fullPath.StartsWith($rootFullPath, [StringComparison]::OrdinalIgnoreCase)) {
         throw "Fixture contains an unsafe path outside the selected drive: $fullPath"
     }
 
-    $candidates = @($fullPath)
+    $candidates = [System.Collections.Generic.List[string]]::new()
+    $candidates.Add($fullPath)
 
     $parentDirectory = Split-Path -Parent $fullPath
     $leafName = Split-Path -Leaf $fullPath
 
     if (Test-Path -LiteralPath $parentDirectory -PathType Container) {
-        $neutralizedPattern = $leafName + '.nohidden-disabled*'
+        $neutralizedPrefix = $leafName + '.nohidden-disabled'
 
-        $candidates += Get-ChildItem -LiteralPath $parentDirectory -Filter $neutralizedPattern -Force -ErrorAction SilentlyContinue |
+        Get-ChildItem -LiteralPath $parentDirectory -Force -ErrorAction SilentlyContinue |
             Where-Object {
-                $_.Name -eq ($leafName + '.nohidden-disabled') -or
-                $_.Name -match ('^' + [regex]::Escape($leafName + '.nohidden-disabled.') + '\d+
-}
-
-Remove-Item -LiteralPath $markerPath -Force
-
-Write-Host "NoHidden test fixture removed from $root." -ForegroundColor Green
-)
+                $_.Name -eq $neutralizedPrefix -or
+                $_.Name -match ('^' + [regex]::Escape($neutralizedPrefix) + '\\.\\d+$')
             } |
-            Select-Object -ExpandProperty FullName
+            ForEach-Object {
+                $candidates.Add($_.FullName)
+            }
     }
 
     foreach ($candidate in ($candidates | Select-Object -Unique)) {
@@ -70,10 +68,12 @@ Write-Host "NoHidden test fixture removed from $root." -ForegroundColor Green
         }
 
         try {
-            [System.IO.File]::SetAttributes($candidate, [System.IO.FileAttributes]::Normal)
+            [System.IO.File]::SetAttributes(
+                $candidate,
+                [System.IO.FileAttributes]::Normal)
         }
         catch {
-            # Directories or files may already have been restored/deleted by NoHidden.
+            # The item may be a directory or may already have been changed by NoHidden.
         }
 
         Remove-Item -LiteralPath $candidate -Recurse -Force

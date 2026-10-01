@@ -42,7 +42,7 @@ foreach ($path in $paths) {
         throw "Fixture contains an unsafe path outside the selected drive: $fullPath"
     }
 
-    if (Test-Path -LiteralPath $fullPath -Force) {
+    if (Test-Path -LiteralPath $fullPath) {
         try {
             [System.IO.File]::SetAttributes($fullPath, [System.IO.FileAttributes]::Normal)
         }

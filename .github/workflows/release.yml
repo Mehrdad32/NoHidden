@@ -1,0 +1,125 @@
+name: Release NoHidden
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nohidden-release-v3.0.0
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: startsWith(github.event.head_commit.message, 'release: v3.0.0')
+    runs-on: windows-latest
+    env:
+      RELEASE_VERSION: v3.0.0
+      RELEASE_VERSION_NUMBER: 3.0.0
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore NoHidden.sln
+
+      - name: Build
+        run: dotnet build NoHidden.sln -c Release --no-restore
+
+      - name: Scanner smoke tests
+        run: dotnet run --project tests/NoHidden.ScannerSmokeTests/NoHidden.ScannerSmokeTests.csproj -c Release --no-restore
+
+      - name: Validate PowerShell test scripts
+        shell: pwsh
+        run: |
+          $files = @(
+            './scripts/New-NoHiddenTestUsb.ps1',
+            './scripts/Remove-NoHiddenTestUsb.ps1'
+          )
+
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path $file),
+              [ref]$tokens,
+              [ref]$errors
+            ) | Out-Null
+
+            if ($errors.Count -gt 0) {
+              $errors | ForEach-Object { Write-Error "$file: $($_.Message)" }
+              exit 1
+            }
+          }
+
+      - name: Publish x64
+        run: >
+          dotnet publish NoHidden/NoHidden.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          --no-restore
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:PublishTrimmed=false
+          -p:Version=${{ env.RELEASE_VERSION_NUMBER }}
+          -o artifacts/win-x64
+
+      - name: Publish x86
+        run: >
+          dotnet publish NoHidden/NoHidden.csproj
+          -c Release
+          -r win-x86
+          --self-contained true
+          --no-restore
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:PublishTrimmed=false
+          -p:Version=${{ env.RELEASE_VERSION_NUMBER }}
+          -o artifacts/win-x86
+
+      - name: Prepare release assets
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release-assets -Force | Out-Null
+
+          Copy-Item artifacts/win-x64/NoHidden.exe "release-assets/NoHidden-v3.0.0-win-x64.exe"
+          Copy-Item artifacts/win-x86/NoHidden.exe "release-assets/NoHidden-v3.0.0-win-x86.exe"
+
+          $assets = @(
+            'release-assets/NoHidden-v3.0.0-win-x64.exe',
+            'release-assets/NoHidden-v3.0.0-win-x86.exe'
+          )
+
+          $checksumLines = foreach ($asset in $assets) {
+            $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $asset).Hash.ToLowerInvariant()
+            $name = Split-Path -Leaf $asset
+            "$hash  $name"
+          }
+
+          $checksumLines | Set-Content -LiteralPath release-assets/SHA256SUMS.txt -Encoding ascii
+
+      - name: Create GitHub tag and release
+        shell: pwsh
+        run: |
+          gh release create $env:RELEASE_VERSION `
+            release-assets/NoHidden-v3.0.0-win-x64.exe `
+            release-assets/NoHidden-v3.0.0-win-x86.exe `
+            release-assets/SHA256SUMS.txt `
+            --target $env:GITHUB_SHA `
+            --title 'NoHidden 3.0.0' `
+            --notes-file RELEASE_NOTES.md

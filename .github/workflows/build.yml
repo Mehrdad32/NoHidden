@@ -38,5 +38,24 @@ jobs:
       - name: Scanner smoke tests
         run: dotnet run --project tests/NoHidden.ScannerSmokeTests/NoHidden.ScannerSmokeTests.csproj -c Release
 
+      - name: Validate PowerShell test scripts
+        shell: pwsh
+        run: |
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path './scripts/New-NoHiddenTestUsb.ps1'),
+            [ref]$null,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
+
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path './scripts/Remove-NoHiddenTestUsb.ps1'),
+            [ref]$null,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
+
       - name: Publish self-contained x64
         run: dotnet publish NoHidden/NoHidden.csproj -c Release -r win-x64 --self-contained true --no-restore

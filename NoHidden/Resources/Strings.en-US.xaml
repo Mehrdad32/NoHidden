@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppTitle">NoHidden</sys:String>
     <sys:String x:Key="AppSubtitle">USB malware recovery &amp; protection</sys:String>
-    <sys:String x:Key="AppVersion">v3.0.0 Development</sys:String>
+    <sys:String x:Key="AppVersion">v3.0.0</sys:String>
 
     <sys:String x:Key="WindowsProtection">Windows protection</sys:String>
     <sys:String x:Key="AntivirusProtection">Antivirus</sys:String>

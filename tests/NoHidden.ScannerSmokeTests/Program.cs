@@ -126,6 +126,23 @@ try
         !repairedAttributes.HasFlag(FileAttributes.System),
         "Visibility repair did not remove Hidden/System attributes.");
 
+    var neutralizationService = new FileNeutralizationService();
+    NeutralizationResult neutralization =
+        neutralizationService.Neutralize(
+            root,
+            impersonatingExecutable);
+
+    Assert(
+        !File.Exists(impersonatingExecutable),
+        "Original suspicious filename still exists after neutralization.");
+
+    Assert(
+        File.Exists(neutralization.NeutralizedPath) &&
+        neutralization.NeutralizedPath.EndsWith(
+            ".nohidden-disabled",
+            StringComparison.OrdinalIgnoreCase),
+        "Neutralized file was not renamed with the safe NoHidden suffix.");
+
     Console.WriteLine(
         $"Scanner smoke test passed. Scanned {report.ScannedItems} items and found {report.Findings.Count} findings.");
 }

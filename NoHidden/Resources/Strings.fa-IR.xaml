@@ -118,4 +118,17 @@
     <sys:String x:Key="ReasonSuspiciousShortcutCommand">این میانبر یکی از مفسرهای دستورات مانند CMD، PowerShell یا Windows Script Host را اجرا می‌کند.</sys:String>
     <sys:String x:Key="ReasonSuspiciousShortcutPayload">این میانبر به یک فایل مخفی، اجرایی یا اسکریپت اشاره می‌کند.</sys:String>
     <sys:String x:Key="ReasonRootShortcut">یک میانبر در ریشه حافظه USB پیدا شد. این الگو در بدافزارهای Shortcut رایج است و برای بررسی علامت‌گذاری شده است.</sys:String>
+
+    <sys:String x:Key="AntivirusDetailsToolTip">نمایش جزئیات آنتی‌ویروس</sys:String>
+    <sys:String x:Key="ScanWithDefender">بررسی با Defender</sys:String>
+    <sys:String x:Key="ScanWithDefenderToolTip">این فایل را با Microsoft Defender و بدون حذف خودکار بررسی کن</sys:String>
+    <sys:String x:Key="NeutralizeFile">غیرفعال‌سازی</sys:String>
+    <sys:String x:Key="NeutralizeFileToolTip">پسوند فایل را به .nohidden-disabled تغییر می‌دهد تا با دوبار کلیک اجرا نشود</sys:String>
+    <sys:String x:Key="NeutralizeConfirmationTitle">غیرفعال‌سازی فایل</sys:String>
+    <sys:String x:Key="NeutralizeConfirmation">فایل «{0}» بدون حذف شدن به پسوند امن .nohidden-disabled تغییر نام داده می‌شود. ادامه می‌دهید؟</sys:String>
+    <sys:String x:Key="FileNeutralized">فایل با نام جدید «{0}» غیرفعال شد.</sys:String>
+    <sys:String x:Key="DefenderScanStarting">Microsoft Defender در حال بررسی فایل است. در صورت نیاز پنجره UAC ویندوز نمایش داده می‌شود.</sys:String>
+    <sys:String x:Key="DefenderScanNoAction">بررسی Microsoft Defender کامل شد و نیاز به اقدام فوری گزارش نشد.</sys:String>
+    <sys:String x:Key="DefenderScanAttention">Microsoft Defender یک تشخیص، نیاز به اقدام یا مشکل در اسکن گزارش کرد. فایل را اجرا نکنید و در صورت تردید آن را غیرفعال کنید.</sys:String>
+    <sys:String x:Key="DefenderScanFailed">بررسی فایل با Microsoft Defender کامل نشد.</sys:String>
 </ResourceDictionary>

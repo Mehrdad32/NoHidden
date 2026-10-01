@@ -783,6 +783,13 @@
                                                                 ToolTip="{DynamicResource ScanWithDefenderToolTip}"
                                                                 Style="{StaticResource FindingActionButtonStyle}" />
 
+                                                        <Button Content="{Binding OnlineCheckActionText}"
+                                                                Command="{Binding DataContext.CheckVirusTotalCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"
+                                                                Visibility="{Binding OnlineCheckActionVisibility}"
+                                                                ToolTip="{DynamicResource CheckVirusTotalToolTip}"
+                                                                Style="{StaticResource FindingActionButtonStyle}" />
+
                                                         <Button Content="{Binding NeutralizeActionText}"
                                                                 Command="{Binding DataContext.NeutralizeFindingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                 CommandParameter="{Binding}"

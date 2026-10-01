@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: nohidden-${{ github.workflow }}-${{ github.ref }}
+  group: nohidden-build-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -36,26 +36,53 @@ jobs:
         run: dotnet build NoHidden.sln -c Release --no-restore
 
       - name: Scanner smoke tests
-        run: dotnet run --project tests/NoHidden.ScannerSmokeTests/NoHidden.ScannerSmokeTests.csproj -c Release
+        run: dotnet run --project tests/NoHidden.ScannerSmokeTests/NoHidden.ScannerSmokeTests.csproj -c Release --no-restore
 
       - name: Validate PowerShell test scripts
         shell: pwsh
         run: |
-          $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile(
-            (Resolve-Path './scripts/New-NoHiddenTestUsb.ps1'),
-            [ref]$null,
-            [ref]$errors
-          ) | Out-Null
-          if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
+          $files = @(
+            './scripts/New-NoHiddenTestUsb.ps1',
+            './scripts/Remove-NoHiddenTestUsb.ps1'
+          )
 
-          $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile(
-            (Resolve-Path './scripts/Remove-NoHiddenTestUsb.ps1'),
-            [ref]$null,
-            [ref]$errors
-          ) | Out-Null
-          if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path $file),
+              [ref]$tokens,
+              [ref]$errors
+            ) | Out-Null
 
-      - name: Publish self-contained x64
-        run: dotnet publish NoHidden/NoHidden.csproj -c Release -r win-x64 --self-contained true --no-restore
+            if ($errors.Count -gt 0) {
+              $errors | ForEach-Object { Write-Error "$file: $($_.Message)" }
+              exit 1
+            }
+          }
+
+      - name: Validate self-contained x64 package
+        run: >
+          dotnet publish NoHidden/NoHidden.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          --no-restore
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:PublishTrimmed=false
+          -o artifacts/win-x64
+
+      - name: Validate self-contained x86 package
+        run: >
+          dotnet publish NoHidden/NoHidden.csproj
+          -c Release
+          -r win-x86
+          --self-contained true
+          --no-restore
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:PublishTrimmed=false
+          -o artifacts/win-x86

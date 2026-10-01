@@ -118,4 +118,17 @@
     <sys:String x:Key="ReasonSuspiciousShortcutCommand">This shortcut launches a command interpreter such as CMD, PowerShell or Windows Script Host.</sys:String>
     <sys:String x:Key="ReasonSuspiciousShortcutPayload">This shortcut points to a hidden or executable/script payload.</sys:String>
     <sys:String x:Key="ReasonRootShortcut">A shortcut was found at the USB root. It is flagged for review because shortcut malware commonly uses this pattern.</sys:String>
+
+    <sys:String x:Key="AntivirusDetailsToolTip">Show antivirus details</sys:String>
+    <sys:String x:Key="ScanWithDefender">Defender scan</sys:String>
+    <sys:String x:Key="ScanWithDefenderToolTip">Scan this file with Microsoft Defender without automatic remediation</sys:String>
+    <sys:String x:Key="NeutralizeFile">Neutralize</sys:String>
+    <sys:String x:Key="NeutralizeFileToolTip">Rename the file with a .nohidden-disabled suffix so it cannot be launched normally</sys:String>
+    <sys:String x:Key="NeutralizeConfirmationTitle">Neutralize file</sys:String>
+    <sys:String x:Key="NeutralizeConfirmation">The file “{0}” will not be deleted. It will be renamed with the safe .nohidden-disabled suffix. Continue?</sys:String>
+    <sys:String x:Key="FileNeutralized">The file was neutralized as “{0}”.</sys:String>
+    <sys:String x:Key="DefenderScanStarting">Microsoft Defender is scanning the file. Windows UAC may appear if elevated access is required.</sys:String>
+    <sys:String x:Key="DefenderScanNoAction">Microsoft Defender finished the scan without reporting an immediate action requirement.</sys:String>
+    <sys:String x:Key="DefenderScanAttention">Microsoft Defender reported a detection, required action, or scan problem. Do not run the file; neutralize it if you are unsure.</sys:String>
+    <sys:String x:Key="DefenderScanFailed">Microsoft Defender could not complete the file scan.</sys:String>
 </ResourceDictionary>

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoHidden", "NoHidden\NoHidd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoHidden.Core", "NoHidden.Core\NoHidden.Core.csproj", "{A17807E8-C497-4A32-9B7B-E61EF60A75D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoHidden.ScannerSmokeTests", "tests\NoHidden.ScannerSmokeTests\NoHidden.ScannerSmokeTests.csproj", "{5D1A9D79-4D0C-4A24-A09B-7B2D447E4C90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A17807E8-C497-4A32-9B7B-E61EF60A75D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A17807E8-C497-4A32-9B7B-E61EF60A75D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A17807E8-C497-4A32-9B7B-E61EF60A75D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D1A9D79-4D0C-4A24-A09B-7B2D447E4C90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D1A9D79-4D0C-4A24-A09B-7B2D447E4C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D1A9D79-4D0C-4A24-A09B-7B2D447E4C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D1A9D79-4D0C-4A24-A09B-7B2D447E4C90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

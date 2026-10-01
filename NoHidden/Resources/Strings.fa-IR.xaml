@@ -17,7 +17,7 @@
     <sys:String x:Key="NotDetected">شناسایی نشد</sys:String>
     <sys:String x:Key="Unknown">نامشخص</sys:String>
 
-    <sys:String x:Key="AutorunProtectionActive">AutoRun و AutoPlay برای کاربر فعلی ویندوز غیرفعال هستند.</sys:String>
+    <sys:String x:Key="AutorunProtectionActive">AutoRun و AutoPlay در سطح سیستم ویندوز غیرفعال هستند.</sys:String>
     <sys:String x:Key="AutorunProtectionRecommended">AutoRun یا AutoPlay فعال است. بهتر است قبل از باز کردن فلش‌های ناشناس محافظت ویندوز فعال شود.</sys:String>
     <sys:String x:Key="ProtectionStatusUnavailable">وضعیت محافظت ویندوز قابل بررسی نبود.</sys:String>
     <sys:String x:Key="AutorunProtectionEnabled">محافظت USB ویندوز با موفقیت فعال شد.</sys:String>

@@ -203,6 +203,7 @@ NoHidden با رویکرد **Offline-first** طراحی شده است.
 - تشخیص‌های Heuristic حکم قطعی Malware نیستند؛ فایل‌های مشکوک را قبل از هر اقدام بررسی کنید.
 - NoHidden عمداً فایل مشکوک را خودکار Delete نمی‌کند.
 - Neutralize در نسخه 3.0.0 هنوز دکمه Undo داخلی ندارد؛ بازگرداندن آن با حذف دستی پسوند `.nohidden-disabled` انجام می‌شود.
+- در نسخه 3.0.0 برای برگرداندن AutoRun/AutoPlay به تنظیم قبلی دکمه Undo داخلی وجود ندارد؛ گزینه Protect Windows یک Policy سیستمی اعمال می‌کند.
 - VirusTotal در این نسخه نتیجه را داخل خود برنامه نمایش نمی‌دهد؛ گزارش Hash در مرورگر باز می‌شود و فایل Upload نمی‌شود.
 - Defender Scan فقط زمانی قابل استفاده است که Microsoft Defender CLI روی ویندوز در دسترس باشد.
 - NoHidden فعلاً Integration مستقیم با موتور CLI آنتی‌ویروس‌های Third-party ندارد.
